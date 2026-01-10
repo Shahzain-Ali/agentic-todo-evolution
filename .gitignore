@@ -1,0 +1,75 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.coversc
+.pytest/
+
+# Logs
+*.log
+logs/
+
+# Environment variables
+.env
+.env.local
+.env.dev
+.env.test
+.env.prod
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.tmp
+*~
+
+# Local configuration
+.config/
+.settings/
+
+# History and temporary files
+.history/
+*.tmp
+
+# Guidance file (specific to local development)
+guidance-of-agentic-todo-project.txt
