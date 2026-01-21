@@ -1,0 +1,12 @@
+# Phase 1: Console Todo Application Dependencies
+# Python 3.12+ required
+
+# Core Dependencies
+rich>=13.0.0
+inquirerpy>=0.3.4
+colorama>=0.4.0
+pyfiglet>=1.0.0
+
+# Development Dependencies (optional)
+pytest>=8.0.0
+pytest-cov>=4.1.0

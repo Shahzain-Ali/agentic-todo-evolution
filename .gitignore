@@ -73,3 +73,18 @@ Thumbs.db
 
 # Guidance file (specific to local development)
 guidance-of-agentic-todo-project.txt
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Setup and test scripts (local only)
+setup-instructions.txt
+test_api.sh
+init_db.py
+create_tables.py
+
+# Reference images and assets (local only)
+*-refference-images/
+*-reference-images/

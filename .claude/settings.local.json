@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(sp.specify)",
+      "Bash(.specify/scripts/bash/create-new-feature.sh:*)",
+      "Bash(.specify/scripts/bash/create-phr.sh:*)",
+      "Skill(sp.plan)",
+      "Bash(.specify/scripts/bash/update-agent-context.sh:*)",
+      "Bash(python -m pytest tests/ -v)",
+      "Bash(python3 -m pytest tests/ -v)",
+      "Bash(python3 -m venv venv)",
+      "Bash(source venv/bin/activate)",
+      "Bash(pip install:*)",
+      "Bash(timeout 10s source venv/bin/activate)",
+      "Bash(python src/main.py)"
+    ]
+  }
+}
