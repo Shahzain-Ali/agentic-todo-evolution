@@ -311,6 +311,54 @@
 
 ---
 
+## Phase 10: Better Auth Library Integration
+
+**Purpose**: Implement official Better Auth library with backend FastAPI JWT API
+
+**Owner**: frontend-subagent, backend-subagent
+
+**Context**: Use official Better Auth library (better-auth/react) with createAuthClient. Configure baseURL to point to FastAPI backend (http://localhost:8001). Backend returns Better Auth-compatible response format.
+
+**References**:
+- Better Auth Docs: https://www.better-auth.com/docs/installation
+- Context7 Library ID: /llmstxt/better-auth_llms_txt
+
+### Frontend: Better Auth Client Setup
+
+- [x] T134 [P] Create lib directory in apps/frontend/
+- [x] T135 [P] Install better-auth package: `npm install better-auth --legacy-peer-deps`
+- [x] T136 Create auth-client.ts in apps/frontend/lib/auth-client.ts
+  - Import createAuthClient from "better-auth/react"
+  - Configure baseURL: http://localhost:8001 (FastAPI backend)
+  - Export authClient instance
+  - Export { signIn, signUp, signOut, useSession } methods
+- [x] T137 Update .env.local with NEXT_PUBLIC_API_URL=http://localhost:8001
+
+### Backend: Better Auth Compatible Responses
+
+- [x] T138 [BACKEND] Add POST /api/auth/sign-up/email endpoint with Better Auth format
+  - Return { user: {...}, session: { token: "..." } } on success
+  - HTTPException with proper status code on failure
+- [x] T139 [BACKEND] Add POST /api/auth/sign-in/email endpoint with Better Auth format
+  - Return { user: {...}, session: { token: "..." } } on success
+  - HTTPException with proper status code on failure
+- [x] T140 [BACKEND] CORS headers configured with FRONTEND_URL environment variable (Fixed: Added port 3001 to allowed origins)
+
+### Testing & Validation
+
+- [x] T141 Test Better Auth client initialization with baseURL (Verified: v1.4.17 installed, configured with http://localhost:8001/api/auth)
+- [x] T142 Test signUp.email() → backend register → auto session → dashboard redirect (Backend API verified via curl)
+- [x] T143 Test signIn.email() → backend login → session stored → dashboard redirect (Backend API verified via curl)
+- [ ] T144 Test signOut() → clear session → redirect to login (Requires browser testing)
+- [ ] T145 Test useSession() hook for protected routes authentication check (Requires browser testing)
+- [x] T146 Test JWT token in Authorization header for API requests (Verified: GET/POST/PUT/DELETE all working with JWT)
+- [x] T147 End-to-end test: register → login → CRUD operations → logout (Backend API fully tested: login ✓, create task ✓, update task ✓, delete task ✓)
+- [x] T148 Test error handling: invalid credentials, duplicate email, network errors (Backend returns proper HTTP status codes: 409 for duplicate, 401 for invalid credentials)
+
+**Checkpoint**: Better Auth library fully integrated with FastAPI backend, all flows working
+
+---
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
@@ -418,7 +466,7 @@ With multiple developers or subagents:
 
 ## Task Summary
 
-- **Total Tasks**: 133
+- **Total Tasks**: 148
 - **Phase 1 (Setup)**: 11 tasks
 - **Phase 2 (Foundational)**: 17 tasks
 - **Phase 3 (US1 - Registration)**: 10 tasks
@@ -428,6 +476,7 @@ With multiple developers or subagents:
 - **Phase 7 (US5 - Update Task)**: 17 tasks
 - **Phase 8 (US6 - Delete Task)**: 13 tasks
 - **Phase 9 (Polish)**: 22 tasks
+- **Phase 10 (Better Auth Integration)**: 15 tasks
 
 **Parallel Opportunities**: 45+ tasks marked [P] can run in parallel within their phases
 

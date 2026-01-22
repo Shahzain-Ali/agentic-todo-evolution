@@ -17,7 +17,7 @@ A modern, production-ready todo web application with beautiful UI inspired by To
 ### ✨ Features
 
 - 🎨 **Modern UI Design**: Clean, minimal interface with smooth animations
-- 🔐 **JWT Authentication**: Secure user authentication with bcrypt password hashing
+- 🔐 **Better Auth Authentication**: Secure user authentication with Better Auth and bcrypt password hashing
 - ✅ **Full CRUD Operations**: Create, read, update, and delete tasks
 - 🎯 **Custom Checkboxes**: Circular design with smooth transitions
 - 👁️ **Hover Actions**: Edit and delete buttons appear on hover
@@ -29,9 +29,9 @@ A modern, production-ready todo web application with beautiful UI inspired by To
 
 ### 🛠️ Tech Stack
 
-**Frontend**: Next.js 16+ • React 19+ • TypeScript 5+ • Tailwind CSS 4+
+**Frontend**: Next.js 16+ • React 19+ • TypeScript 5+ • Tailwind CSS 4+ • Better Auth
 
-**Backend**: FastAPI 0.100+ • SQLModel 0.14+ • Python 3.11+ • JWT • Pydantic v2
+**Backend**: FastAPI 0.100+ • SQLModel 0.14+ • Python 3.11+ • Better Auth • Pydantic v2
 
 **Database**: PostgreSQL 15+ • Neon Serverless • Alembic migrations
 
@@ -68,12 +68,21 @@ Frontend: http://localhost:3000
 
 ### 🔐 API Endpoints
 
+**Better Auth Endpoints:**
+- `POST /api/auth/sign-up/email` - User registration (Better Auth)
+- `POST /api/auth/sign-in/email` - User login (Better Auth)
+
+**Legacy JWT Endpoints (for backward compatibility):**
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/login` - User login (returns JWT)
+
+**Task Management:**
 - `GET /api/tasks` - Get all user tasks
 - `POST /api/tasks` - Create new task
 - `PUT /api/tasks/{id}` - Update task
 - `DELETE /api/tasks/{id}` - Delete task
+
+**Health:**
 - `GET /health` - Health check
 
 ### 🎨 UI Design Highlights
