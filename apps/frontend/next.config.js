@@ -2,9 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
 
-  // Production optimizations
-  swcMinify: true,
-
   // Compiler options
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
@@ -18,7 +15,7 @@ const nextConfig = {
 
   // Environment variables
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001',
   },
 
   // Headers for security

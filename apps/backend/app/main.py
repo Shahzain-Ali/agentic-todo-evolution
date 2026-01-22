@@ -29,6 +29,7 @@ app = FastAPI(
 origins = [
     os.getenv("FRONTEND_URL", "http://localhost:3000"),
     "http://localhost:3000",  # Development fallback
+    "http://localhost:3001",  # Current frontend port
     "http://localhost:3003",  # Alternative port
 ]
 

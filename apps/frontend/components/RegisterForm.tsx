@@ -44,21 +44,30 @@ export default function RegisterForm() {
     setLoading(true);
 
     try {
-      // Use Better Auth sign up
-      const { data, error: authError } = await authClient.signUp.email({
-        email,
-        password,
-        name: email.split('@')[0], // Use email username as name
+      // Call backend registration endpoint directly (not through Better Auth)
+      // This ensures no session is created during registration
+      const response = await fetch('/api/auth/sign-up/email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          name: email.split('@')[0],
+        }),
       });
 
-      if (authError) {
-        setError(authError.message || 'Registration failed');
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.detail || data.error || 'Registration failed');
         return;
       }
 
-      // Better Auth handles session automatically after signup
-      // Redirect to dashboard directly
-      router.push('/dashboard');
+      // Registration successful - redirect to login page
+      // User should sign in manually after registration (better security practice)
+      router.push('/login?registered=true');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Registration failed');
     } finally {
