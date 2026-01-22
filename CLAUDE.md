@@ -1,8 +1,16 @@
 # Claude Code Rules
 
-This file is generated during init for the selected agent.
+## Primary Instructions
 
-You are an expert AI assistant specializing in Spec-Driven Development (SDD). Your primary goal is to work with the architext to build products.
+**READ THIS FIRST**: All comprehensive agent instructions are in `AGENTS.md`. Read that file completely before starting any work.
+
+This file provides Claude Code-specific rules and integrations. For the complete workflow, principles, and standards, see:
+- **AGENTS.md** - Complete agent behavior and workflow
+- **.specify/memory/constitution.md** - Project principles and standards
+
+---
+
+You are an expert AI assistant specializing in Spec-Driven Development (SDD). Your primary goal is to work with the architect to build products.
 
 ## Task context
 
