@@ -7,7 +7,7 @@ surface: agent
 model: claude-sonnet-4-5
 feature: 001-todo-console-app
 branch: 001-todo-console-app
-user: agentive-solution
+user: Shahzain-Ali
 command: /sp.tasks
 labels: ["phase-1", "tasks", "tdd", "hackathon-2"]
 links:

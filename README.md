@@ -1,4 +1,96 @@
-# 📋 Todo Console Application
+# 📋 Agentic Todo Evolution
+
+A progressive todo application demonstrating evolution from console app to modern full-stack web application.
+
+## 🎯 Project Overview
+
+This project showcases systematic application development through two phases:
+- **Phase 1**: Console application with in-memory storage
+- **Phase 2**: Full-stack web application with modern UI and database persistence
+
+---
+
+## 🚀 Phase 2: Full-Stack Web Application (Current)
+
+A modern, production-ready todo web application with beautiful UI inspired by Todoist and Microsoft To Do.
+
+### ✨ Features
+
+- 🎨 **Modern UI Design**: Clean, minimal interface with smooth animations
+- 🔐 **JWT Authentication**: Secure user authentication with bcrypt password hashing
+- ✅ **Full CRUD Operations**: Create, read, update, and delete tasks
+- 🎯 **Custom Checkboxes**: Circular design with smooth transitions
+- 👁️ **Hover Actions**: Edit and delete buttons appear on hover
+- 📱 **Responsive Design**: Optimized for mobile, tablet, and desktop
+- ⚡ **Real-time Updates**: Instant UI feedback with optimistic updates
+- 🌈 **Smooth Animations**: Fade-in, slide-in effects throughout
+- 🔒 **User Isolation**: Each user sees only their own tasks
+- 📊 **Loading States**: Beautiful skeleton loaders and spinners
+
+### 🛠️ Tech Stack
+
+**Frontend**: Next.js 16+ • React 19+ • TypeScript 5+ • Tailwind CSS 4+
+
+**Backend**: FastAPI 0.100+ • SQLModel 0.14+ • Python 3.11+ • JWT • Pydantic v2
+
+**Database**: PostgreSQL 15+ • Neon Serverless • Alembic migrations
+
+### 🚀 Quick Start
+
+**Backend Setup:**
+```bash
+cd apps/backend
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv venv && source .venv/bin/activate
+uv pip install -e .
+cp .env.example .env  # Configure DATABASE_URL and SECRET_KEY
+alembic upgrade head
+uvicorn app.main:app --reload
+```
+Backend: http://localhost:8000 | API Docs: http://localhost:8000/docs
+
+**Frontend Setup:**
+```bash
+cd apps/frontend
+npm install
+cp .env.example .env.local  # Configure NEXT_PUBLIC_API_URL
+npm run dev
+```
+Frontend: http://localhost:3000
+
+### 📚 Documentation
+
+- **[Quickstart Guide](specs/002-todo-web-app/quickstart.md)** - Detailed setup and deployment
+- **[API Documentation](http://localhost:8000/docs)** - Interactive API docs
+- **[Specification](specs/002-todo-web-app/spec.md)** - Requirements and user stories
+- **[Architecture](specs/002-todo-web-app/plan.md)** - Technical decisions
+- **[Tasks](specs/002-todo-web-app/tasks.md)** - Implementation breakdown (121/133 completed)
+
+### 🔐 API Endpoints
+
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login (returns JWT)
+- `GET /api/tasks` - Get all user tasks
+- `POST /api/tasks` - Create new task
+- `PUT /api/tasks/{id}` - Update task
+- `DELETE /api/tasks/{id}` - Delete task
+- `GET /health` - Health check
+
+### 🎨 UI Design Highlights
+
+**Inspired by Todoist and Microsoft To Do:**
+- Clean, minimal layout with focus on tasks
+- Custom circular checkboxes with smooth animations
+- Hover interactions for cleaner interface
+- Subtle fade-in and slide-in effects
+- Modern typography with proper spacing
+- Responsive cards with rounded corners and shadows
+- Skeleton loaders matching content structure
+- Friendly empty states with icons
+
+---
+
+## 📋 Phase 1: Todo Console Application
 
 A beautiful and user-friendly command-line todo application with in-memory storage, featuring rich visual elements and an intuitive interactive menu system.
 

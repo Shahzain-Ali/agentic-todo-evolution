@@ -7,19 +7,19 @@
 
 ## Summary
 
-Build a beautiful and user-friendly command-line todo application with in-memory storage supporting seven core experiences: add tasks with title/description through intuitive interface, view all tasks with rich visual indicators and filtering options, mark tasks complete/incomplete with visual feedback, update task details with validation, delete tasks with confirmation, navigate through an interactive menu system with visual elements, and view statistics with visual representations. The application will use Python 3.12+ with rich libraries (rich, pyfiglet, colorama) and UV for package management, following clean code principles and proper project structure. Data persists only during runtime (lost on application exit). The focus is on providing immediate user feedback, clear error messages, intuitive visual interactions, and an engaging user experience with ASCII art, progress indicators, and colorful interface elements.
+Build a command-line todo application with in-memory storage supporting five core operations: add tasks with title/description, view all tasks with status indicators, mark tasks complete/incomplete, update task details, and delete tasks by ID. The application will use Python 3.13+ with UV for package management, following clean code principles and proper project structure. Data persists only during runtime (lost on application exit). The focus is on providing immediate user feedback, clear error messages, and intuitive command-line interactions.
 
 ## Technical Context
 
-**Language/Version**: Python 3.12+
-**Primary Dependencies**: rich>=13.0.0, pyfiglet>=1.0.0, colorama>=0.4.0, inquirerpy>=0.3.4
+**Language/Version**: Python 3.13+
+**Primary Dependencies**: None (built-in libraries only for Phase I)
 **Storage**: In-memory (Python lists/dictionaries)
 **Testing**: pytest
 **Target Platform**: Cross-platform console (Linux, macOS, Windows)
 **Project Type**: Single console application
 **Performance Goals**: Instant response (<1 second) for all operations regardless of list size
-**Constraints**: Single-user, no persistence, command-line interface only
-**Scale/Scope**: Small-scale console app (~800-1200 LOC), support for hundreds of tasks in memory with rich visual interface
+**Constraints**: Single-user usage, no data persistence, command-line–readable output, and a clean, visually appealing interface.
+**Scale/Scope**: Small-scale console app (~500-1000 LOC), support for hundreds of tasks in memory
 
 ## Constitution Check
 
@@ -63,11 +63,10 @@ src/
 │   ├── models.py        # Todo entity and TodoList collection
 │   ├── storage.py       # In-memory storage manager
 │   ├── operations.py    # CRUD operations logic
-│   ├── cli.py           # Classic command-line interface and user interactions
-│   ├── rich_cli.py      # Enhanced visual interface with rich elements
+│   ├── cli.py           # Command-line interface and user interactions
 │   ├── validators.py    # Input validation logic
 │   └── formatters.py    # Output formatting for display
-└── main.py              # Application entry point (switches between classic/rich CLI)
+└── main.py              # Application entry point
 
 tests/
 ├── unit/
@@ -80,7 +79,7 @@ tests/
 │   └── test_cli_integration.py
 └── conftest.py          # Pytest fixtures
 
-pyproject.toml           # UV/pip configuration with rich dependencies
+pyproject.toml           # UV/pip configuration
 README.md                # Setup and usage instructions
 CLAUDE.md                # Claude Code development instructions (already exists)
 .specify/                # Spec-Kit Plus configuration (already exists)
