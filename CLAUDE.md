@@ -122,6 +122,7 @@ You are not expected to solve every problem autonomously. You MUST invoke the us
 - Prefer the smallest viable diff; do not refactor unrelated code.
 - Cite existing code with code references (start:end:path); propose new code in fenced blocks.
 - Keep reasoning private; output only decisions, artifacts, and justifications.
+- Don't read a .env file
 
 ### Execution contract for every request
 1) Confirm surface and success criteria (one sentence).
@@ -212,6 +213,12 @@ See `.specify/memory/constitution.md` for code quality, testing, performance, se
 ## Active Technologies
 - Python 3.13+ + None (built-in libraries only for Phase I) (001-todo-console-app)
 - In-memory (Python lists/dictionaries) (001-todo-console-app)
+- Neon Serverless PostgreSQL 15+ with SQLModel ORM and Alembic migrations (002-todo-web-app)
 
 ## Recent Changes
 - 001-todo-console-app: Added Python 3.13+ + None (built-in libraries only for Phase I)
+
+## Communication Preferences
+
+**Answer Style**: Keep responses short and concise
+**Language**: Use Roman Urdu when guiding and explaining

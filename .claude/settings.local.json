@@ -12,7 +12,33 @@
       "Bash(source venv/bin/activate)",
       "Bash(pip install:*)",
       "Bash(timeout 10s source venv/bin/activate)",
-      "Bash(python src/main.py)"
+      "Bash(python src/main.py)",
+      "Bash(tasklist:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(cmd //c \"taskkill /PID 13348 /F\")",
+      "WebFetch(domain:)",
+      "Bash(git config:*)",
+      "Bash(.specify/scripts/bash/setup-plan.sh --json)",
+      "WebSearch",
+      "WebFetch(domain:sqlmodel.tiangolo.com)",
+      "Bash(curl:*)",
+      "Bash(python3:*)",
+      "Bash(npx create-next-app@latest:*)",
+      "Bash(source .venv/bin/activate)",
+      "Bash(uvicorn app.main:app:*)",
+      "Bash(python init_db.py:*)",
+      "Bash(python create_tables.py:*)",
+      "Bash(npm run dev:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs",
+      "Bash(DATABASE_URL='postgresql://neondb_owner:npg_p1MNr8VPCHjt@ep-morning-credit-ah0wstjx-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require' AUTH_SECRET='your-super-secret-key-min-32-chars-long-for-production-use' npx @better-auth/cli@latest migrate:*)",
+      "Bash(npm ls:*)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "github",
+    "context7"
+  ],
+  "disabledMcpjsonServers": []
 }
