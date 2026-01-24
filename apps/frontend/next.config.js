@@ -2,6 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
 
+  // Skip ESLint during builds (ESLint v9 compatibility issue)
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   // Compiler options
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
