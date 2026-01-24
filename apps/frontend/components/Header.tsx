@@ -1,37 +1,74 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
+import {
+  Menu,
+  Bell,
+  Calendar as CalendarIcon,
+  LayoutGrid,
+  LogOut,
+} from 'lucide-react';
 
-export default function Header() {
+interface HeaderProps {
+  onMenuClick?: () => void;
+}
+
+export default function Header({ onMenuClick }: HeaderProps) {
   const router = useRouter();
 
-  const handleLogout = () => {
-    // Clear token from localStorage
-    localStorage.removeItem('access_token');
-
-    // Clear session cookie
-    document.cookie = 'session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-
-    // Redirect to login
+  const handleLogout = async () => {
+    // Use Better Auth sign out
+    await authClient.signOut();
     router.push('/login');
   };
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
-            <h1 className="text-xl font-bold text-gray-900">Todo App</h1>
-          </div>
+    <header className="bg-background border-b border-border sticky top-0 z-30">
+      <div className="flex justify-between items-center h-14 px-4 lg:px-6">
+        {/* Left: Hamburger Menu (Mobile Only) */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onMenuClick}
+            className="lg:hidden p-2 hover:bg-background-subtle rounded-lg transition-colors"
+            aria-label="Open menu"
+          >
+            <Menu className="w-5 h-5 text-text-secondary" />
+          </button>
+        </div>
 
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={handleLogout}
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100 transition-colors"
-            >
-              Logout
-            </button>
-          </div>
+        {/* Right: Utility Buttons */}
+        <div className="flex items-center gap-2">
+          {/* Notifications */}
+          <button
+            className="p-2 hover:bg-background-subtle rounded-lg transition-colors"
+            aria-label="Notifications"
+          >
+            <Bell className="w-5 h-5 text-text-secondary" />
+          </button>
+
+          {/* Calendar Connect */}
+          <button className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-sm text-text-secondary hover:text-text-primary hover:bg-background-subtle rounded-lg transition-colors">
+            <CalendarIcon className="w-4 h-4" />
+            <span className="hidden md:inline">Connect calendar</span>
+          </button>
+
+          {/* Display Options */}
+          <button
+            className="p-2 hover:bg-background-subtle rounded-lg transition-colors"
+            aria-label="Display options"
+          >
+            <LayoutGrid className="w-5 h-5 text-text-secondary" />
+          </button>
+
+          {/* Logout */}
+          <button
+            onClick={handleLogout}
+            className="p-2 hover:bg-background-subtle rounded-lg transition-colors text-text-secondary hover:text-danger"
+            aria-label="Logout"
+          >
+            <LogOut className="w-5 h-5" />
+          </button>
         </div>
       </div>
     </header>

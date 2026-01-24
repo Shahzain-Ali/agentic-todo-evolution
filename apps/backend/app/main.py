@@ -26,12 +26,18 @@ app = FastAPI(
 )
 
 # CORS Configuration
-origins = [
-    os.getenv("FRONTEND_URL", "http://localhost:3000"),
-    "http://localhost:3000",  # Development fallback
-    "http://localhost:3001",  # Current frontend port
-    "http://localhost:3003",  # Alternative port
-]
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+
+if ENVIRONMENT == "production":
+    origins = [FRONTEND_URL]
+else:
+    origins = [
+        FRONTEND_URL,
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://localhost:3003",
+    ]
 
 app.add_middleware(
     CORSMiddleware,
