@@ -121,7 +121,7 @@ export default function TaskCard({ task, onUpdate }: TaskCardProps) {
             value={editTitle}
             onChange={(e) => setEditTitle(e.target.value)}
             placeholder="Task title"
-            className="w-full px-0 py-3 text-lg font-semibold text-gray-900 border-0 border-b-2 border-gray-200 focus:border-blue-500 focus:ring-0 focus:outline-none transition-colors placeholder:text-gray-400"
+            className="w-full px-0 py-3 text-lg font-semibold text-gray-900 border-0 border-b-2 border-gray-200 focus:border-primary focus:ring-0 focus:outline-none transition-colors placeholder:text-gray-400"
             maxLength={200}
             disabled={loading}
             autoFocus
@@ -141,7 +141,7 @@ export default function TaskCard({ task, onUpdate }: TaskCardProps) {
             <button
               onClick={handleSaveEdit}
               disabled={loading || !editTitle.trim()}
-              className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-semibold rounded-xl hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:scale-105"
+              className="px-6 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg shadow-primary/20 hover:shadow-xl hover:scale-105"
             >
               {loading ? 'Saving...' : 'Save'}
             </button>
@@ -163,7 +163,7 @@ export default function TaskCard({ task, onUpdate }: TaskCardProps) {
       className={`group bg-white rounded-2xl border transition-all duration-300 hover:shadow-lg ${
         isCompleted
           ? 'border-gray-200/50 bg-gray-50/50'
-          : 'border-gray-200 hover:border-blue-200'
+          : 'border-gray-200 hover:border-primary/20'
       } animate-in fade-in slide-in-from-bottom-3`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -184,8 +184,8 @@ export default function TaskCard({ task, onUpdate }: TaskCardProps) {
           disabled={loading}
           className={`flex-shrink-0 mt-0.5 w-6 h-6 rounded-full border-2 transition-all duration-300 ${
             isCompleted
-              ? 'bg-gradient-to-br from-blue-500 to-blue-600 border-blue-500 shadow-lg shadow-blue-500/30'
-              : 'border-gray-300 hover:border-blue-400 hover:scale-110'
+              ? 'bg-primary border-primary shadow-lg shadow-primary/20'
+              : 'border-gray-300 hover:border-primary hover:scale-110'
           } ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} flex items-center justify-center group-hover:scale-110`}
           aria-label={isCompleted ? 'Mark as incomplete' : 'Mark as complete'}
         >
@@ -253,7 +253,7 @@ export default function TaskCard({ task, onUpdate }: TaskCardProps) {
           <button
             onClick={() => setIsEditing(true)}
             disabled={loading}
-            className="p-2.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200"
+            className="p-2.5 text-gray-400 hover:text-primary hover:bg-primary/5 rounded-xl transition-all duration-200"
             title="Edit task"
           >
             <svg

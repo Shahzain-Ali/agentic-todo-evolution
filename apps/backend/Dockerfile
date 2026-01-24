@@ -10,14 +10,11 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Install uv for faster package management
-RUN pip install --no-cache-dir uv
+# Copy dependency file
+COPY requirements.txt ./
 
-# Copy dependency files
-COPY pyproject.toml ./
-
-# Install dependencies using uv
-RUN uv pip install --system -r pyproject.toml
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Production stage
 FROM python:3.11-slim
@@ -41,12 +38,12 @@ COPY . .
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
 USER appuser
 
-# Expose port
-EXPOSE 8000
+# Expose port (Railway injects PORT env var)
+EXPOSE ${PORT:-8000}
 
-# Health check
+# Health check using stdlib (no extra dependency)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:8000/health')"
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:${PORT:-8000}/health')"
 
-# Run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run the application (uses PORT env var from Railway, defaults to 8000)
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

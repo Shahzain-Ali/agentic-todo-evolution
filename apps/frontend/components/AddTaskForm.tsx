@@ -69,7 +69,7 @@ export default function AddTaskForm({ onTaskAdded }: AddTaskFormProps) {
   };
 
   return (
-    <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-gray-200/50 shadow-sm p-6 mb-8 transition-all duration-300 hover:shadow-lg hover:border-blue-200">
+    <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-gray-200/50 shadow-sm p-6 mb-8 transition-all duration-300 hover:shadow-lg hover:border-primary/20">
       {error && (
         <div className="mb-4 bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-r text-sm animate-in fade-in slide-in-from-top-2 duration-300">
           <div className="flex items-center gap-2">
@@ -85,7 +85,7 @@ export default function AddTaskForm({ onTaskAdded }: AddTaskFormProps) {
         <div className="relative">
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0 mt-1">
-              <div className="w-5 h-5 rounded-full border-2 border-gray-300 group-hover:border-blue-400 transition-colors"></div>
+              <div className="w-5 h-5 rounded-full border-2 border-gray-300 group-hover:border-primary transition-colors"></div>
             </div>
             <div className="flex-1 space-y-3">
               <input
@@ -129,7 +129,7 @@ export default function AddTaskForm({ onTaskAdded }: AddTaskFormProps) {
           <button
             type="submit"
             disabled={loading || !title.trim()}
-            className="group px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-semibold rounded-xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+            className="group px-6 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:scale-105"
           >
             {loading ? (
               <span className="flex items-center gap-2">

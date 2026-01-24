@@ -15,7 +15,7 @@
 ## Path Conventions
 
 - **Monorepo structure**: `apps/frontend/` and `apps/backend/`
-- Frontend paths: `apps/frontend/src/`
+- Frontend paths: `apps/frontend/` (app/, components/, lib/)
 - Backend paths: `apps/backend/app/`
 
 ---
@@ -466,7 +466,7 @@ With multiple developers or subagents:
 
 ## Task Summary
 
-- **Total Tasks**: 148
+- **Total Tasks**: 201
 - **Phase 1 (Setup)**: 11 tasks
 - **Phase 2 (Foundational)**: 17 tasks
 - **Phase 3 (US1 - Registration)**: 10 tasks
@@ -477,11 +477,602 @@ With multiple developers or subagents:
 - **Phase 8 (US6 - Delete Task)**: 13 tasks
 - **Phase 9 (Polish)**: 22 tasks
 - **Phase 10 (Better Auth Integration)**: 15 tasks
+- **Phase 11A (US7 - Sidebar Navigation)**: 7 tasks
+- **Phase 11B (US8 - Today View Redesign)**: 6 tasks
+- **Phase 11C (US9 - Additional Views)**: 5 tasks
+- **Phase 11D (US10 - Auth Pages Redesign)**: 4 tasks
+- **Phase 11E (US11 - Mobile & Polish)**: 10 tasks
+- **Phase 12 (Deployment)**: 21 tasks (includes 3 pre-deployment fixes)
 
-**Parallel Opportunities**: 45+ tasks marked [P] can run in parallel within their phases
+**Parallel Opportunities**: 60+ tasks marked [P] can run in parallel within their phases
 
 **MVP Scope**: Phases 1-4 (52 tasks) deliver authentication system
 
 **Full CRUD**: Phases 1-8 (111 tasks) deliver complete application
 
-**Production Ready**: All phases (133 tasks) deliver polished, deployable application
+**Full CRUD + Better Auth**: Phases 1-10 (148 tasks) deliver production-ready backend
+
+**Modern UI/UX**: Phases 1-11 (180 tasks) deliver complete Todoist-inspired interface
+
+**Execution Strategy**:
+1. Complete Phases 1-10 first (backend + basic UI must work)
+2. Then start Phase 11 (UI/UX enhancement)
+3. Test each User Story (US7-US11) independently before moving to next
+
+---
+
+## Phase 11: UI/UX Enhancement - Todoist-Inspired Design
+
+**Purpose**: Redesign frontend UI to match Todoist reference images with golden/amber color scheme
+
+**Context**: Current UI has centered layout with blue theme. Target design requires left sidebar navigation, golden/amber (#FDB813) color scheme, and Todoist-inspired modern interface.
+
+**Reference Images**: `apps/frontend/frontend-refference-images/*.png` (7 reference screenshots)
+
+**Color Palette**:
+- Primary: Golden Yellow `#FDB813`
+- Secondary: Black `#1A1A1A`
+- Accent: White/Cream `#FFFFFF`
+- Status Colors: Red (#D1453B), Orange (#FF9933), Blue (#5297FF), Green (completed)
+
+**⚠️ CRITICAL**: All backend functionality must remain unchanged. This is purely a frontend visual redesign.
+
+---
+
+## Phase 11A: User Story 7 - Sidebar Navigation Layout (Priority: P1) 🎯 MVP
+
+**Goal**: Implement left sidebar navigation with menu items (Today, Upcoming, Completed) and update color scheme to golden/amber theme
+
+**Independent Test**: Navigate between Today, Upcoming, Completed views via sidebar. Verify sidebar collapses on mobile.
+
+**Owner**: frontend-subagent
+
+### Design Foundation for US7
+
+- [ ] T149 [P] [US7] Update Tailwind config in apps/frontend/tailwind.config.ts with golden/amber color scheme
+  - Define primary color: golden (#FDB813)
+  - Define secondary color: black (#1A1A1A)
+  - Define neutral grays for text and borders
+  - Remove blue theme references
+- [ ] T150 [P] [US7] Install lucide-react icon library for Todoist-style icons
+  - Run: npm install lucide-react --legacy-peer-deps
+  - Icons needed: Inbox, Calendar, Clock, CheckCircle, User, Search, Plus
+
+### Sidebar Component for US7
+
+- [ ] T151 [US7] Create Sidebar component in apps/frontend/components/Sidebar.tsx
+  - Fixed left sidebar (264px width on desktop)
+  - Top section: User profile with dropdown
+  - Golden circular "+ Add task" button
+  - Search field with magnifying glass icon
+  - Navigation menu items:
+    * Today (Calendar icon, /dashboard)
+    * Upcoming (Clock icon, /dashboard/upcoming)
+    * Completed (CheckCircle icon, /dashboard/completed)
+  - Bottom section: Help & resources link
+  - Mobile: Hidden by default, toggle with hamburger menu
+
+### Layout Integration for US7
+
+- [ ] T152 [US7] Update dashboard layout in apps/frontend/app/dashboard/layout.tsx
+  - Two-column layout: Sidebar (264px) + Main content (flex-1)
+  - Remove gradient background, use clean white (#FFFFFF)
+  - Add mobile responsiveness:
+    * <768px: Sidebar hidden, hamburger menu visible
+    * ≥768px: Sidebar always visible
+  - Add overlay when sidebar open on mobile
+- [ ] T153 [US7] Update Header component in apps/frontend/components/Header.tsx
+  - Remove user profile (moved to sidebar)
+  - Add hamburger menu button (mobile only)
+  - Add top-right utility buttons: Notifications, Calendar connect, Display options
+  - Golden accent colors for active states
+
+### Color Scheme Update for US7
+
+- [ ] T154 [P] [US7] Replace all blue colors with golden/amber throughout app
+  - Update all buttons (primary actions = golden #FDB813)
+  - Update links and text accents
+  - Update focus rings and states
+  - Update loading spinners
+- [ ] T155 [P] [US7] Update neutral color palette
+  - Text primary: #1A1A1A (black)
+  - Text secondary: #666666 (gray)
+  - Text tertiary: #999999 (light gray)
+  - Borders: #EAEAEA (very light gray)
+  - Background: #FAFAFA (off-white)
+
+**Checkpoint**: At this point, sidebar navigation should work and color scheme should be golden/amber
+
+---
+
+## Phase 11B: User Story 8 - Today View Redesign (Priority: P1)
+
+**Goal**: Redesign Today page with Todoist-inspired clean, minimal UI
+
+**Independent Test**: Visit /dashboard (Today view) and verify tasks display in clean list format with proper styling
+
+**Owner**: frontend-subagent
+
+### Today Page Redesign for US8
+
+- [ ] T156 [US8] Redesign Today page in apps/frontend/app/dashboard/page.tsx
+  - Page heading: "Today" (24px, bold, #1A1A1A)
+  - Inline "+ Add task" link at top (golden color)
+  - Empty state with suitcase illustration and friendly message
+  - Clean white background (#FFFFFF)
+  - Remove gradient backgrounds
+
+### Task Components Redesign for US8
+
+- [ ] T157 [US8] Update TaskList component in apps/frontend/components/TaskList.tsx
+  - Remove card-style background
+  - Minimal divider lines between tasks (#EAEAEA)
+  - Clean vertical stack layout (no gaps)
+  - Smooth animations for add/remove
+- [ ] T158 [US8] Update TaskCard component in apps/frontend/components/TaskCard.tsx
+  - Circular checkbox (outline when unchecked, filled golden when checked)
+  - Task name with clean typography (14px, #1A1A1A)
+  - Strikethrough when completed (#999999)
+  - Remove heavy shadows and borders
+  - Subtle hover background (#FAFAFA)
+  - Edit/delete icons appear on hover
+- [ ] T159 [US8] Update AddTaskForm component in apps/frontend/components/AddTaskForm.tsx
+  - Convert to inline/modal style (expands on click)
+  - Large borderless title input (18px placeholder)
+  - Description field appears on focus
+  - Bottom toolbar: Date picker, Priority, Reminders (icons)
+  - Golden "Add task" button (#FDB813)
+  - Gray "Cancel" button (#666666)
+
+### Typography & Spacing for US8
+
+- [ ] T160 [P] [US8] Update global typography in apps/frontend/app/globals.css
+  - Font family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif
+  - Base font size: 14px
+  - Line height: 1.5
+  - Font weights: 400 (normal), 600 (semibold), 700 (bold)
+- [ ] T161 [P] [US8] Implement consistent spacing system
+  - Content padding: 48px (desktop), 24px (mobile)
+  - Task item padding: 12px 16px
+  - Section gaps: 24px
+  - Input fields: 12px padding
+
+**Checkpoint**: At this point, Today view should match Todoist reference design
+
+---
+
+## Phase 11C: User Story 9 - Additional Views Implementation (Priority: P2)
+
+**Goal**: Implement Upcoming and Completed views with Todoist-style layout
+
+**Independent Test**: Navigate to /dashboard/upcoming and /dashboard/completed, verify proper layout and functionality
+
+**Owner**: frontend-subagent
+
+### Shared Components for US9
+
+- [ ] T162 [P] [US9] Create EmptyState component in apps/frontend/components/EmptyState.tsx
+  - Reusable component for all empty states
+  - Props: illustration (ReactNode), heading (string), message (string)
+  - Center-aligned layout
+  - Support for custom illustrations
+
+### Upcoming View for US9
+
+- [ ] T163 [US9] Create Upcoming page in apps/frontend/app/dashboard/upcoming/page.tsx
+  - "Upcoming" heading (24px, bold)
+  - Calendar week selector (January 2026, arrows for navigation)
+  - Mini calendar showing current week dates
+  - Tasks grouped by date sections:
+    * "24 Jan · Today · Saturday"
+    * "25 Jan · Tomorrow · Sunday"
+    * "26 Jan · Monday"
+  - "+ Add task" link under each date group
+  - Empty state when no upcoming tasks
+- [ ] T164 [US9] Create date grouping utility function
+  - Group tasks by date (today, tomorrow, future dates)
+  - Format dates: "DD MMM · Day name"
+  - Sort chronologically
+
+### Completed View for US9
+
+- [ ] T165 [US9] Create Completed page in apps/frontend/app/dashboard/completed/page.tsx
+  - "Activity: All projects" dropdown header
+  - Empty state with trophy + confetti illustration
+  - Message: "No activity in the past week."
+  - Explanation text about completed tasks
+  - List completed tasks with completion date when available
+- [ ] T166 [US9] Add filter logic for completed tasks
+  - Filter tasks where status === "completed"
+  - Sort by completion date (newest first)
+  - Display completion timestamp
+
+**Checkpoint**: At this point, Upcoming and Completed views should be functional
+
+---
+
+## Phase 11D: User Story 10 - Authentication Pages Redesign (Priority: P2)
+
+**Goal**: Redesign Login and Register pages to match Todoist clean aesthetic
+
+**Independent Test**: Visit /login and /register, verify clean design with golden theme
+
+**Owner**: frontend-subagent
+
+### Login Page Redesign for US10
+
+- [ ] T167 [US10] Redesign Login page in apps/frontend/app/login/page.tsx
+  - Clean white background (remove blue gradient)
+  - App logo/icon at top (golden theme)
+  - "Welcome back!" heading (32px, bold)
+  - Subtitle: "Log in to your account"
+  - Email/Password fields with subtle borders
+  - Golden "Log in" button (full width)
+  - "Forgot your password?" link (golden)
+  - "Don't have an account? Sign up" at bottom
+- [ ] T168 [US10] Update LoginForm component in apps/frontend/components/LoginForm.tsx
+  - Clean input styling: subtle border (#EAEAEA), rounded corners
+  - Focus state: golden border (#FDB813)
+  - Golden submit button with hover effect
+  - Smooth loading state (spinner + disabled)
+
+### Register Page Redesign for US10
+
+- [ ] T169 [US10] Redesign Register page in apps/frontend/app/register/page.tsx
+  - Match login page structure
+  - "Sign up" heading (32px, bold)
+  - Subtitle: "Create your account"
+  - Email/Password fields
+  - Golden "Sign up with Email" button (full width)
+  - Terms of Service and Privacy Policy links (small text)
+  - "Already signed up? Go to login" at bottom
+- [ ] T170 [US10] Update RegisterForm component in apps/frontend/components/RegisterForm.tsx
+  - Match LoginForm styling
+  - Consistent input fields and button design
+  - Validation error messages (red #D1453B)
+
+**Checkpoint**: At this point, authentication pages should have modern, clean design
+
+---
+
+## Phase 11E: User Story 11 - Mobile Responsiveness & Polish (Priority: P3)
+
+**Goal**: Ensure perfect mobile experience and add smooth animations
+
+**Independent Test**: Test on mobile devices (375px, 414px) and tablets (768px, 1024px), verify all interactions work
+
+**Owner**: frontend-subagent
+
+### Mobile Responsiveness for US11
+
+- [ ] T171 [US11] Implement responsive sidebar collapse/expand
+  - Mobile (<768px): Sidebar hidden by default
+  - Hamburger menu button in header (mobile only)
+  - Sidebar slides in from left with smooth animation
+  - Dark overlay behind sidebar when open
+  - Close sidebar on navigation or outside click
+- [ ] T172 [P] [US11] Optimize touch interactions for mobile
+  - Larger touch targets (min 44px height)
+  - Comfortable spacing between interactive elements
+  - Prevent text selection on double-tap
+  - Smooth scroll behavior
+- [ ] T173 [P] [US11] Test all responsive breakpoints
+  - Mobile: 375px (iPhone SE), 414px (iPhone Pro Max)
+  - Tablet: 768px (iPad), 1024px (iPad Pro)
+  - Desktop: 1280px, 1440px, 1920px
+
+### Animations & Transitions for US11
+
+- [ ] T174 [P] [US11] Add smooth transitions throughout app
+  - Sidebar collapse/expand: 300ms ease-in-out
+  - Task completion: checkbox animation + fade out
+  - Task add/remove: slide-in/fade-out animations
+  - Hover states: 200ms transitions
+  - Modal/form appearance: slide-up animation
+- [ ] T175 [P] [US11] Add loading states and skeletons
+  - Task list skeleton loaders (3 placeholders)
+  - Button loading state (spinner + disabled)
+  - Optimistic UI updates (instant feedback)
+
+### Testing & Validation for US11
+
+- [ ] T176 [US11] Visual comparison with reference images
+  - Login page ✓
+  - Register page ✓
+  - Today page ✓
+  - Upcoming page ✓
+  - Completed page ✓
+  - Sidebar navigation ✓
+- [ ] T177 [P] [US11] Test all CRUD operations still work
+  - Create task from Today view ✓
+  - Update task inline ✓
+  - Delete task with confirmation ✓
+  - Mark task as complete/incomplete ✓
+- [ ] T178 [P] [US11] Test navigation flows
+  - Sidebar navigation between views ✓
+  - URL updates correctly ✓
+  - Browser back/forward buttons ✓
+  - Mobile hamburger menu ✓
+- [ ] T179 [P] [US11] Accessibility audit
+  - Keyboard navigation works (Tab, Enter, Escape)
+  - Focus indicators visible (golden outline)
+  - Color contrast meets WCAG AA
+  - Screen reader compatibility (ARIA labels)
+- [ ] T180 [US11] Performance check
+  - Page load time <2s
+  - Task list renders smoothly (60fps)
+  - Animations run smoothly
+  - No layout shifts (CLS <0.1)
+
+**Checkpoint**: All user stories for UI/UX redesign should now be complete and independently functional
+
+---
+
+## Dependencies & Execution Order (Phase 11)
+
+### User Story Dependencies
+
+- **User Story 7 (US7)**: Foundation - Must complete first (sidebar layout + color scheme)
+- **User Story 8 (US8)**: Depends on US7 (requires sidebar to be in place)
+- **User Story 9 (US9)**: Depends on US7 (uses sidebar navigation)
+- **User Story 10 (US10)**: Independent - Can run in parallel with US8/US9 (separate pages)
+- **User Story 11 (US11)**: Depends on US7-US10 (polishes all views)
+
+### Recommended Execution Order
+
+1. **US7**: Sidebar Navigation + Color Scheme (Foundation)
+2. **US8**: Today View Redesign (Core functionality)
+3. **US9 + US10**: Additional Views + Auth Pages (Can run in parallel)
+4. **US11**: Mobile & Polish (Final touches)
+
+### Parallel Opportunities
+
+- US9 and US10 can be implemented in parallel (different pages)
+- Within each user story, tasks marked [P] can run in parallel
+- Color scheme updates (T154-T155) can be done in one batch
+
+---
+
+## Phase 11 Summary
+
+- **Total Tasks**: 32 new tasks (T149-T180)
+- **User Stories**: 5 (US7-US11)
+- **Focus**: Pure frontend UI/UX redesign, zero backend changes
+- **Dependencies**: Requires Phase 1-10 complete (backend must be working)
+
+**User Story Breakdown**:
+- **US7** (6 tasks): Sidebar Navigation + Color Scheme
+- **US8** (6 tasks): Today View Redesign
+- **US9** (5 tasks): Upcoming + Completed Views
+- **US10** (4 tasks): Authentication Pages
+- **US11** (11 tasks): Mobile Responsiveness + Polish
+
+**Testing Strategy**:
+- Test each User Story independently after completion
+- User should check and approve UI before moving to next US
+- Verify all existing functionality still works after each US
+- Final validation: side-by-side comparison with reference images
+
+---
+
+## Phase 12: Deployment (Production)
+
+**Purpose**: Deploy the complete application to production platforms
+
+**Owner**: All subagents
+
+**⚠️ CRITICAL**: Deployment must follow this order: Database → Backend → Frontend. Each step depends on the previous one being live and verified.
+
+**Platforms**:
+- Database: Neon Serverless PostgreSQL (already deployed)
+- Backend: Railway (containerized with Docker)
+- Frontend: Vercel (zero-config Next.js hosting)
+
+---
+
+### Step 1: Database Deployment (Neon PostgreSQL)
+
+- [x] T181 [DEPLOY] Create Neon account and project at https://neon.tech
+  - Sign up / log in to Neon console
+  - Create new project (e.g., "agentic-todo-production")
+  - Select region closest to backend deployment (e.g., US East)
+  - Copy the connection string (DATABASE_URL) - save securely
+  - **STATUS: Already deployed**
+
+- [x] T182 [DEPLOY] Run database migrations against Neon
+  - Set DATABASE_URL environment variable to Neon connection string
+  - Run: `cd apps/backend && alembic upgrade head`
+  - Verify tables created: users, tasks
+  - **STATUS: Already deployed and migrated**
+
+---
+
+### Step 2: Backend Deployment (Railway)
+
+#### Pre-Deployment Fixes (Must complete before T183)
+
+- [x] T181.1 [DEPLOY] Fix Dockerfile for Railway compatibility (apps/backend/Dockerfile)
+  - Switch from `uv pip install --system -r pyproject.toml` to `pip install -r requirements.txt`
+  - Update CMD to use PORT env var: `CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]`
+  - Fix healthcheck: Replace `requests.get()` with `urllib.request.urlopen()` (stdlib, no extra dep)
+  - Remove uv installation step (unnecessary complexity for deployment)
+
+- [x] T181.2 [DEPLOY] Consolidate to single dependency file (removed pyproject.toml)
+  - Keep `requirements.txt` as the single source of truth (already more complete)
+  - Remove `pyproject.toml` OR keep it as metadata-only (remove `dependencies` list)
+  - `requirements.txt` already has: python-dotenv, bcrypt pin, pydantic[email], PyJWT
+  - Verify all imports in app/ are covered by requirements.txt
+
+- [x] T181.3 [DEPLOY] Update backend CORS for production (apps/backend/app/main.py)
+  - Remove hardcoded localhost ports (3000, 3001, 3003) for production
+  - Use only `FRONTEND_URL` env var for allowed origins
+  - Keep localhost fallbacks only when ENVIRONMENT != "production"
+  - Example: `if os.getenv("ENVIRONMENT") == "production": origins = [FRONTEND_URL] else: origins = [FRONTEND_URL, "http://localhost:3000", ...]`
+
+#### Railway Setup
+
+- [ ] T183 [DEPLOY] Create Railway account and new project at https://railway.com
+  - Sign up / log in to Railway dashboard
+  - Click "New Project" → "Deploy from GitHub Repo"
+  - Connect GitHub repository (agentic-todo-evolution)
+  - Set Root Directory: `apps/backend` (in Service Settings)
+  - Railway auto-detects Dockerfile
+
+- [ ] T184 [DEPLOY] Configure backend environment variables on Railway
+  - DATABASE_URL = (Neon connection string from T181)
+  - SECRET_KEY = (generate a strong random 32+ char secret: `python -c "import secrets; print(secrets.token_urlsafe(32))"`)
+  - ALGORITHM = HS256
+  - ACCESS_TOKEN_EXPIRE_MINUTES = 1440
+  - FRONTEND_URL = (will update after frontend deploys, temporarily set to *)
+  - ENVIRONMENT = production
+  - PORT = 8000 (Railway uses PORT env var)
+
+- [ ] T185 [DEPLOY] Deploy backend and verify health check
+  - Trigger deploy on Railway (automatic on push or manual)
+  - Wait for build to complete (Docker image build)
+  - Generate public domain: Settings → Networking → Generate Domain
+  - Verify health check: GET https://<your-app>.up.railway.app/health returns 200
+  - Note the deployed backend URL (e.g., https://agentic-todo-backend.up.railway.app)
+
+- [ ] T186 [DEPLOY] Verify database migrations on production
+  - Migrations already applied via Neon (T182)
+  - Verify: POST /api/auth/register works with a test user
+  - If needed: Use Railway shell to run `alembic upgrade head`
+
+- [ ] T187 [DEPLOY] Test backend API endpoints in production
+  - Test POST /api/auth/register (create test account)
+  - Test POST /api/auth/sign-in/email (login, get JWT token)
+  - Test GET /api/tasks (with Authorization header)
+  - Test POST /api/tasks (create a task)
+  - Test PUT /api/tasks/{id} (update task status)
+  - Test DELETE /api/tasks/{id} (delete task)
+  - All should return correct responses
+
+---
+
+### Step 3: Frontend Deployment (Vercel)
+
+- [ ] T188 [DEPLOY] Create Vercel account and import project at https://vercel.com
+  - Sign up / log in to Vercel dashboard
+  - Click "Add New" → "Project"
+  - Import GitHub repository (agentic-todo-evolution)
+  - Set Root Directory: `apps/frontend`
+  - Framework Preset: Next.js (auto-detected)
+  - Build Command: `npm run build` (default)
+  - Output Directory: `.next` (default)
+
+- [ ] T189 [DEPLOY] Configure frontend environment variables on Vercel
+  - NEXT_PUBLIC_API_URL = https://<your-backend>.up.railway.app (from T185)
+  - NEXT_PUBLIC_SITE_URL = https://<your-frontend>.vercel.app (will know after first deploy)
+  - NODE_ENV = production
+  - Note: Auth routes and proxy routes both use NEXT_PUBLIC_API_URL to forward to backend
+
+- [ ] T190 [DEPLOY] Deploy frontend and verify access
+  - Trigger deploy on Vercel (automatic on push or manual)
+  - Wait for build to complete
+  - Access the deployed URL (e.g., https://agentic-todo.vercel.app)
+  - Verify landing page loads without errors
+  - Note the deployed frontend URL
+
+---
+
+### Step 4: Cross-Platform Configuration
+
+- [ ] T191 [DEPLOY] Update backend CORS to allow Vercel frontend domain
+  - Go to Railway dashboard → Variables
+  - Update FRONTEND_URL = https://<your-frontend>.vercel.app
+  - Redeploy backend for changes to take effect
+  - Verify: No CORS errors when frontend calls backend API
+
+- [ ] T192 [DEPLOY] Update frontend NEXT_PUBLIC_SITE_URL with actual Vercel domain
+  - Go to Vercel dashboard → Settings → Environment Variables
+  - Set NEXT_PUBLIC_SITE_URL = https://<your-frontend>.vercel.app
+  - Redeploy frontend for changes to take effect
+
+- [ ] T193 [DEPLOY] Verify frontend proxy routes use correct backend URL
+  - apps/frontend/app/api/proxy/[...path]/route.ts uses `NEXT_PUBLIC_API_URL`
+  - apps/frontend/app/api/auth/[...all]/route.ts uses `NEXT_PUBLIC_API_URL`
+  - Both default to `localhost:8001` in code — ensure Vercel env var overrides this
+  - No code changes needed if NEXT_PUBLIC_API_URL is set correctly on Vercel
+
+---
+
+### Step 5: End-to-End Production Verification
+
+- [ ] T194 [DEPLOY] Test complete user flow on production
+  - Visit https://<your-frontend>.vercel.app
+  - Register a new account (email + password)
+  - Login with new account credentials
+  - Create a new task (title + description)
+  - Mark task as completed
+  - Edit task title/description
+  - Delete a task
+  - Navigate to Upcoming view (shows pending tasks)
+  - Navigate to Completed view (shows completed tasks)
+  - Logout and verify redirect to login
+  - All operations should work without errors
+
+- [ ] T195 [DEPLOY] Verify security in production
+  - HTTPS is active on both frontend and backend
+  - No secrets exposed in browser console or network tab
+  - CORS blocks unauthorized origins
+  - JWT token included in authenticated requests
+  - Unauthenticated access redirects to login
+  - Cannot access other users' tasks
+
+- [ ] T196 [DEPLOY] Performance check on production
+  - Page load time < 3 seconds
+  - API response time < 1 second
+  - No console errors in browser
+  - Mobile responsive (test on phone or DevTools)
+
+---
+
+### Step 6: Post-Deployment (Optional)
+
+- [ ] T197 [DEPLOY] Set up custom domain (optional)
+  - Frontend: Add custom domain in Vercel settings
+  - Backend: Add custom domain in Railway settings
+  - Update FRONTEND_URL (Railway) and NEXT_PUBLIC_API_URL + NEXT_PUBLIC_SITE_URL (Vercel) with new domains
+  - Verify SSL certificates are active
+
+- [ ] T198 [DEPLOY] Set up monitoring and alerts (optional)
+  - Enable Railway health check monitoring
+  - Set up Vercel analytics (frontend performance)
+  - Monitor Neon database usage (connection limits, storage)
+
+---
+
+## Phase 12 Summary
+
+- **Total Tasks**: 21 tasks (T181-T198 + T181.1, T181.2, T181.3 pre-deployment fixes)
+- **Steps**: 6 (Database → Pre-Deploy Fixes → Backend → Frontend → Cross-Config → Verification → Optional)
+- **Platforms**: Neon (DB - already live), Railway (Backend), Vercel (Frontend)
+
+**Execution Order (STRICT)**:
+1. T181-T182: Database (already live ✅)
+2. T181.1-T181.3: Pre-deployment code fixes (Dockerfile, deps, CORS)
+3. T183-T187: Backend must be live second (frontend needs API URL)
+4. T188-T190: Frontend deploys third (needs backend URL)
+5. T191-T193: Cross-platform config (both must be live)
+6. T194-T196: End-to-end verification (everything must work together)
+7. T197-T198: Optional post-deployment enhancements
+
+**Key Dependencies**:
+```
+T181-T182 (Neon DB ✅) → T181.1-T181.3 (Pre-Deploy Fixes) → T183 (Railway) → T184 (Env Vars) → T185 (Deploy)
+                                                                                                      ↓
+T194 (E2E Test) ← T191 (CORS Update) ← T190 (Deploy Frontend) ← T189 (Env Vars) ← T188 (Vercel Setup)
+```
+
+**Environment Variables Reference**:
+```
+Backend (Railway):          Frontend (Vercel):
+├── DATABASE_URL            ├── NEXT_PUBLIC_API_URL (→ Railway URL)
+├── SECRET_KEY              ├── NEXT_PUBLIC_SITE_URL (→ Vercel URL)
+├── ALGORITHM               └── NODE_ENV = production
+├── ACCESS_TOKEN_EXPIRE_MINUTES
+├── FRONTEND_URL (→ Vercel URL)
+├── ENVIRONMENT = production
+└── PORT = 8000
+```
