@@ -63,3 +63,11 @@ dmypy.json
 
 # Alembic
 alembic/versions/*.pyc
+
+# Phase 3: AI-Powered Todo Chatbot
+# SQLite conversation history (managed by OpenAI Agents SDK)
+conversation_history.db
+conversation_history.db-*
+*.db-journal
+*.db-wal
+*.db-shm
