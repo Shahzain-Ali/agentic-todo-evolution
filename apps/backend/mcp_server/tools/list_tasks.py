@@ -78,7 +78,7 @@ async def list_tasks(
         else:
             # Demo UUID for testing (matches database UUID type)
             from uuid import UUID
-            user_id = UUID("00000000-0000-0000-0000-000000000001")
+            user_id = UUID("625460a4-b5f7-4c64-ba84-66da5dabfd3c")
             logger.info(f"Using demo user_id={user_id} (no JWT token provided)")
 
         logger.info(f"list_tasks called by user_id={user_id}, filter={filter}")
