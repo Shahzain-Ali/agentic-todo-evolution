@@ -65,12 +65,14 @@ async def add_task(
         }
     """
     try:
-        # Authenticate user (use demo user if no token provided)
+        # Authenticate user (use demo UUID if no token provided)
         if jwt_token:
             user_id = require_authentication(jwt_token)
         else:
-            user_id = 1  # Demo user for testing
-            logger.info("Using demo user_id=1 (no JWT token provided)")
+            # Demo UUID for testing (matches database UUID type)
+            from uuid import UUID
+            user_id = UUID("00000000-0000-0000-0000-000000000001")
+            logger.info(f"Using demo user_id={user_id} (no JWT token provided)")
 
         logger.info(f"add_task called by user_id={user_id}")
 
