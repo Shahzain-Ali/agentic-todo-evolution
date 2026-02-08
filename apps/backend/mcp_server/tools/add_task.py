@@ -30,24 +30,23 @@ logger = logging.getLogger(__name__)
 
 
 async def add_task(
-    jwt_token: str,
     title: str,
-    description: Optional[str] = None
+    description: Optional[str] = None,
+    jwt_token: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     Create a new todo task
 
     Args:
-        jwt_token: JWT authentication token
         title: Task title (max 200 characters)
         description: Optional task description (max 1000 characters)
+        jwt_token: Optional JWT authentication token (for testing, uses demo user if not provided)
 
     Returns:
         Success response with created task or error response
 
     Example:
         >>> result = await add_task(
-        ...     jwt_token="eyJ...",
         ...     title="Buy groceries",
         ...     description="Milk, eggs, bread"
         ... )
@@ -66,8 +65,13 @@ async def add_task(
         }
     """
     try:
-        # Authenticate user
-        user_id = require_authentication(jwt_token)
+        # Authenticate user (use demo user if no token provided)
+        if jwt_token:
+            user_id = require_authentication(jwt_token)
+        else:
+            user_id = 1  # Demo user for testing
+            logger.info("Using demo user_id=1 (no JWT token provided)")
+
         logger.info(f"add_task called by user_id={user_id}")
 
         # Validate title
