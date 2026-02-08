@@ -1,11 +1,10 @@
 /**
- * Todo Chatbot Component
+ * Todo Chatbot Component - OpenAI Hosted ChatKit
  *
  * [Task]: T044
  * [From]: specs/003-ai-chatbot/spec.md §3 (User Stories), specs/003-ai-chatbot/plan.md §Phase 8
  *
- * This component provides the AI-powered chat interface for todo management
- * using OpenAI's ChatKit React component.
+ * This component uses OpenAI's hosted ChatKit with client secret authentication.
  */
 
 "use client";
@@ -13,11 +12,53 @@
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
 
 export default function TodoChatbot() {
-  // Initialize ChatKit with MCP server backend
+  // Initialize ChatKit with OpenAI-hosted backend using getClientSecret
   const { control } = useChatKit({
     api: {
-      url: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000",
-      domainKey: "local-dev",
+      async getClientSecret(existing) {
+        // If we have an existing secret and it's not expired, refresh it
+        if (existing) {
+          const res = await fetch('/api/chatkit/refresh', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: existing }),
+          });
+          const data = await res.json();
+          return data.client_secret;
+        }
+
+        // Otherwise, create a new ChatKit session
+        const res = await fetch('/api/chatkit/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await res.json();
+        return data.client_secret;
+      },
+    },
+    // Customize the start screen
+    startScreen: {
+      greeting: "Hello! I'm your AI Todo Assistant 🤖",
+      prompts: [
+        {
+          label: "Add a task",
+          prompt: "Add buy groceries to my list",
+          icon: "plus",
+        },
+        {
+          label: "View tasks",
+          prompt: "Show me all my tasks",
+          icon: "list",
+        },
+        {
+          label: "Complete a task",
+          prompt: "Mark task 1 as done",
+          icon: "check",
+        },
+      ],
+    },
+    composer: {
+      placeholder: "Ask me to add, view, or complete tasks...",
     },
   });
 

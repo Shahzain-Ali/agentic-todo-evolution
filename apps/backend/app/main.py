@@ -4,7 +4,7 @@ import os
 import logging
 from dotenv import load_dotenv
 
-from app.routers import auth, tasks
+from app.routers import auth, tasks, chatkit
 
 # Load environment variables from .env file
 load_dotenv()
@@ -50,6 +50,7 @@ app.add_middleware(
 # Include routers
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(tasks.router, prefix="/api/tasks", tags=["tasks"])
+app.include_router(chatkit.router, prefix="/api", tags=["chatkit"])  # ChatKit endpoint at /api/chatkit
 
 @app.get("/health")
 def health_check():
