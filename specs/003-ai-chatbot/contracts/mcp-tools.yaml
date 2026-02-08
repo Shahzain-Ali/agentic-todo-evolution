@@ -1,0 +1,409 @@
+# MCP Tools Contract: AI-Powered Todo Chatbot (Phase 3)
+#
+# This file defines the contract for the 5 MCP tools exposed by the MCP server.
+# Format: OpenAPI-style specification adapted for MCP tools.
+#
+# Feature Branch: 003-ai-chatbot
+# Date: 2026-02-04
+
+info:
+  title: Todo MCP Tools
+  version: "1.0.0"
+  description: |
+    MCP tools for natural language todo management.
+    All tools require JWT authentication and return JSON strings.
+
+server:
+  name: todo-mcp-server
+  transport: http/sse
+  port: 8001
+  endpoint: /mcp
+
+# Common definitions
+definitions:
+  JwtToken:
+    type: string
+    description: Better Auth JWT token for user authentication
+    required: true
+    validation: Must be valid, non-expired JWT
+
+  TaskId:
+    type: integer
+    description: Unique task identifier
+    required: true
+    validation: Must be positive integer
+
+  TaskResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+      description:
+        type: string
+        nullable: true
+      completed:
+        type: boolean
+      user_id:
+        type: integer
+      created_at:
+        type: string
+        format: datetime
+      updated_at:
+        type: string
+        format: datetime
+
+  SuccessResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+        value: true
+      task:
+        $ref: "#/definitions/TaskResponse"
+
+  ListResponse:
+    type: object
+    properties:
+      tasks:
+        type: array
+        items:
+          $ref: "#/definitions/TaskResponse"
+      count:
+        type: integer
+      filter:
+        type: string
+        enum: [all, completed, pending]
+
+  ErrorResponse:
+    type: object
+    properties:
+      error:
+        type: object
+        properties:
+          code:
+            type: string
+            enum: [unauthorized, not_found, forbidden, validation_error, server_error]
+          message:
+            type: string
+
+# Tool definitions
+tools:
+  # ============================================
+  # Tool 1: add_task
+  # ============================================
+  add_task:
+    name: add_task
+    description: |
+      Create a new task for the authenticated user.
+
+      Use this tool when the user wants to:
+      - Add a new task to their list
+      - Create a todo item
+      - Remember something to do
+
+      Example user inputs:
+      - "Add buy milk to my list"
+      - "Create a task to call mom"
+      - "Remind me to finish the report"
+      - "I need to do laundry"
+
+    parameters:
+      jwt_token:
+        $ref: "#/definitions/JwtToken"
+      title:
+        type: string
+        description: Task title (what the user wants to do)
+        required: true
+        minLength: 1
+        maxLength: 200
+        examples:
+          - "Buy milk"
+          - "Call mom"
+          - "Finish the presentation"
+      description:
+        type: string
+        description: Optional additional details about the task
+        required: false
+        maxLength: 1000
+        default: ""
+        examples:
+          - "Need to get 2% milk from Trader Joe's"
+          - "Discuss birthday plans"
+
+    returns:
+      success:
+        $ref: "#/definitions/SuccessResponse"
+        example:
+          success: true
+          task:
+            id: 1
+            title: "Buy milk"
+            description: ""
+            completed: false
+            user_id: 1
+            created_at: "2026-02-04T10:00:00Z"
+            updated_at: "2026-02-04T10:00:00Z"
+      error:
+        $ref: "#/definitions/ErrorResponse"
+        examples:
+          - code: unauthorized
+            message: "Invalid or expired token"
+          - code: validation_error
+            message: "Title is required"
+
+    errors:
+      - code: unauthorized
+        when: JWT token is invalid or expired
+      - code: validation_error
+        when: Title is empty or exceeds 200 characters
+
+  # ============================================
+  # Tool 2: list_tasks
+  # ============================================
+  list_tasks:
+    name: list_tasks
+    description: |
+      List the user's tasks with optional filter.
+
+      Use this tool when the user wants to:
+      - See their tasks or todo list
+      - Check what they need to do
+      - View completed or pending tasks
+
+      Example user inputs:
+      - "Show me my tasks"
+      - "What do I need to do?"
+      - "List completed tasks"
+      - "What's on my todo list?"
+      - "What have I finished?"
+
+    parameters:
+      jwt_token:
+        $ref: "#/definitions/JwtToken"
+      filter:
+        type: string
+        description: |
+          Filter tasks by completion status:
+          - "all": Show all tasks (default)
+          - "completed": Show only completed tasks
+          - "pending": Show only incomplete tasks
+        required: false
+        default: "all"
+        enum: [all, completed, pending]
+
+    returns:
+      success:
+        $ref: "#/definitions/ListResponse"
+        example:
+          tasks:
+            - id: 1
+              title: "Buy milk"
+              completed: false
+            - id: 2
+              title: "Call mom"
+              completed: true
+          count: 2
+          filter: "all"
+      error:
+        $ref: "#/definitions/ErrorResponse"
+
+    errors:
+      - code: unauthorized
+        when: JWT token is invalid or expired
+
+  # ============================================
+  # Tool 3: complete_task
+  # ============================================
+  complete_task:
+    name: complete_task
+    description: |
+      Mark a task as completed.
+
+      Use this tool when the user wants to:
+      - Mark a task as done
+      - Complete a todo item
+      - Check off a task
+
+      Example user inputs:
+      - "Mark buy milk as done"
+      - "Complete task 5"
+      - "I finished the presentation"
+      - "Check off the laundry task"
+
+    parameters:
+      jwt_token:
+        $ref: "#/definitions/JwtToken"
+      task_id:
+        $ref: "#/definitions/TaskId"
+        description: ID of the task to mark as complete
+
+    returns:
+      success:
+        $ref: "#/definitions/SuccessResponse"
+        example:
+          success: true
+          task:
+            id: 1
+            title: "Buy milk"
+            completed: true
+            user_id: 1
+      error:
+        $ref: "#/definitions/ErrorResponse"
+
+    errors:
+      - code: unauthorized
+        when: JWT token is invalid or expired
+      - code: not_found
+        when: Task with given ID doesn't exist
+      - code: forbidden
+        when: Task belongs to another user
+
+  # ============================================
+  # Tool 4: delete_task
+  # ============================================
+  delete_task:
+    name: delete_task
+    description: |
+      Delete a task permanently.
+
+      Use this tool when the user wants to:
+      - Remove a task from their list
+      - Delete a todo item
+      - Get rid of a task
+
+      Example user inputs:
+      - "Delete the buy milk task"
+      - "Remove task 3"
+      - "Get rid of the meeting task"
+      - "Delete that task"
+
+    parameters:
+      jwt_token:
+        $ref: "#/definitions/JwtToken"
+      task_id:
+        $ref: "#/definitions/TaskId"
+        description: ID of the task to delete
+
+    returns:
+      success:
+        type: object
+        properties:
+          success:
+            type: boolean
+            value: true
+          message:
+            type: string
+        example:
+          success: true
+          message: "Task 'Buy milk' deleted"
+      error:
+        $ref: "#/definitions/ErrorResponse"
+
+    errors:
+      - code: unauthorized
+        when: JWT token is invalid or expired
+      - code: not_found
+        when: Task with given ID doesn't exist
+      - code: forbidden
+        when: Task belongs to another user
+
+  # ============================================
+  # Tool 5: update_task
+  # ============================================
+  update_task:
+    name: update_task
+    description: |
+      Update task details. Only provided fields are updated.
+
+      Use this tool when the user wants to:
+      - Change a task's title or description
+      - Rename a task
+      - Update task details
+      - Mark task as incomplete (undo completion)
+
+      Example user inputs:
+      - "Change task 3 to 'Call John'"
+      - "Rename buy milk to buy organic milk"
+      - "Update the presentation task description"
+      - "Mark task 5 as not done"
+
+    parameters:
+      jwt_token:
+        $ref: "#/definitions/JwtToken"
+      task_id:
+        $ref: "#/definitions/TaskId"
+        description: ID of the task to update
+      title:
+        type: string
+        description: New task title (optional)
+        required: false
+        minLength: 1
+        maxLength: 200
+      description:
+        type: string
+        description: New task description (optional)
+        required: false
+        maxLength: 1000
+      completed:
+        type: boolean
+        description: New completion status (optional)
+        required: false
+
+    returns:
+      success:
+        $ref: "#/definitions/SuccessResponse"
+        example:
+          success: true
+          task:
+            id: 3
+            title: "Call John"
+            description: "Discuss project updates"
+            completed: false
+            user_id: 1
+      error:
+        $ref: "#/definitions/ErrorResponse"
+
+    errors:
+      - code: unauthorized
+        when: JWT token is invalid or expired
+      - code: not_found
+        when: Task with given ID doesn't exist
+      - code: forbidden
+        when: Task belongs to another user
+      - code: validation_error
+        when: No fields provided to update, or title empty
+
+# ChatKit API Routes (Next.js)
+chatkit_routes:
+  session:
+    method: POST
+    path: /api/chatkit/session
+    description: Create new ChatKit session for authenticated user
+    authentication: Better Auth session cookie
+    request: null
+    response:
+      type: object
+      properties:
+        client_secret:
+          type: string
+          description: ChatKit session token
+
+  refresh:
+    method: POST
+    path: /api/chatkit/refresh
+    description: Refresh expired ChatKit session token
+    authentication: None (token in body)
+    request:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Existing (possibly expired) token
+    response:
+      type: object
+      properties:
+        client_secret:
+          type: string
+          description: New ChatKit session token
