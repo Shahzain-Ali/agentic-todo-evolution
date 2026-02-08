@@ -18,7 +18,7 @@ import logging
 from typing import Dict, Any, Optional, Literal
 from sqlmodel import Session, select
 
-from app.models.task import Task
+from app.models.task import Task, TaskStatus
 from ..utils.auth import require_authentication
 from ..utils.errors import (
     create_success_response,
@@ -100,9 +100,9 @@ async def list_tasks(
 
             # Apply filter
             if filter == "completed":
-                statement = statement.where(Task.completed == True)
+                statement = statement.where(Task.status == TaskStatus.COMPLETED)
             elif filter == "pending":
-                statement = statement.where(Task.completed == False)
+                statement = statement.where(Task.status == TaskStatus.PENDING)
             # "all" filter doesn't add additional conditions
 
             # Order by created_at descending (newest first)
@@ -116,11 +116,11 @@ async def list_tasks(
             # Format tasks for response
             tasks_data = [
                 {
-                    "id": task.id,
+                    "id": str(task.id),
                     "title": task.title,
                     "description": task.description,
-                    "completed": task.completed,
-                    "user_id": task.user_id,
+                    "completed": task.status == TaskStatus.COMPLETED,
+                    "user_id": str(task.user_id),
                     "created_at": task.created_at.isoformat() if task.created_at else None,
                     "updated_at": task.updated_at.isoformat() if task.updated_at else None,
                 }
