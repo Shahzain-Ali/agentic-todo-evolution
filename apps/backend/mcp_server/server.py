@@ -114,6 +114,9 @@ mcp.tool()(complete_task)
 # mcp.tool()(delete_task)
 # mcp.tool()(update_task)
 
+# ASGI app for uvicorn (FastMCP is not directly ASGI-compatible)
+app = mcp.http_app()
+
 
 if __name__ == "__main__":
     # Run MCP server
@@ -122,7 +125,7 @@ if __name__ == "__main__":
     logger.info("Starting MCP server via uvicorn...")
 
     uvicorn.run(
-        "mcp_server.server:mcp",
+        "mcp_server.server:app",
         host=config.HOST,
         port=config.PORT,
         reload=True if config.LOG_LEVEL == "DEBUG" else False
