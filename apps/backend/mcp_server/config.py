@@ -17,8 +17,8 @@ class MCPConfig:
     """Configuration for MCP server"""
 
     # Server Settings
-    HOST: str = os.getenv("MCP_SERVER_HOST", "localhost")
-    PORT: int = int(os.getenv("MCP_SERVER_PORT", "8001"))
+    HOST: str = os.getenv("MCP_SERVER_HOST", "0.0.0.0")
+    PORT: int = int(os.getenv("PORT", os.getenv("MCP_SERVER_PORT", "8001")))
 
     # Database Settings (reuse from Phase 2)
     DATABASE_URL: str = os.getenv(

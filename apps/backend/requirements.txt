@@ -20,7 +20,6 @@ mcp>=1.0.0  # Model Context Protocol SDK
 fastmcp>=0.2.0  # HTTP/SSE transport for MCP
 openai>=1.0.0  # OpenAI Python SDK (for ChatKit session creation)
 openai-agents>=0.1.0  # OpenAI Agents SDK (for MCP tool integration)
-chatkit>=1.0.0  # ChatKit Python SDK (for ChatKit server endpoint)
 
 # Development Dependencies (optional)
 pytest>=7.4.0
