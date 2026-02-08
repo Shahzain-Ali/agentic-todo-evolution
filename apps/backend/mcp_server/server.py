@@ -114,36 +114,10 @@ mcp.tool()(complete_task)
 # mcp.tool()(delete_task)
 # mcp.tool()(update_task)
 
-# Create ASGI app using FastAPI wrapper for deployment compatibility
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-
-app = FastAPI(title="MCP Todo Server")
-
-# CORS for external access
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-@app.get("/")
-def root():
-    return {"service": "MCP Todo Server", "status": "running", "version": config.SERVER_VERSION}
-
-@app.get("/health")
-def health():
-    return {"status": "healthy"}
-
-# Mount FastMCP SSE app
-try:
-    mcp_app = mcp.http_app()
-    app.mount("/mcp", mcp_app)
-    logger.info("MCP app mounted at /mcp")
-except Exception as e:
-    logger.warning(f"Could not mount MCP app: {e}")
+# Create ASGI app directly from FastMCP
+# This exposes MCP protocol at the root path
+app = mcp.http_app()
+logger.info("MCP ASGI app created successfully")
 
 
 if __name__ == "__main__":
