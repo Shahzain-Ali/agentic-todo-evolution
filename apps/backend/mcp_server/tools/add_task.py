@@ -15,7 +15,7 @@ import logging
 from typing import Dict, Any, Optional
 from sqlmodel import Session
 
-from app.models.task import Task
+from app.models.task import Task, TaskStatus
 from ..utils.auth import require_authentication
 from ..utils.errors import (
     create_success_response,
@@ -104,7 +104,7 @@ async def add_task(
             task = Task(
                 title=title.strip(),
                 description=description.strip() if description else None,
-                completed=False,
+                status=TaskStatus.PENDING,
                 user_id=user_id
             )
 
@@ -117,11 +117,11 @@ async def add_task(
             # Return success response
             return create_success_response({
                 "task": {
-                    "id": task.id,
+                    "id": str(task.id),
                     "title": task.title,
                     "description": task.description,
-                    "completed": task.completed,
-                    "user_id": task.user_id,
+                    "completed": task.status == TaskStatus.COMPLETED,
+                    "user_id": str(task.user_id),
                     "created_at": task.created_at.isoformat() if task.created_at else None,
                     "updated_at": task.updated_at.isoformat() if task.updated_at else None,
                 }

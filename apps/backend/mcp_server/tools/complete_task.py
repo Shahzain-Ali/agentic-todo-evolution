@@ -18,7 +18,7 @@ import logging
 from typing import Dict, Any, Optional
 from sqlmodel import Session, select
 
-from app.models.task import Task
+from app.models.task import Task, TaskStatus
 from ..utils.auth import require_authentication
 from ..utils.errors import (
     create_success_response,
@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 
 
 async def complete_task(
-    task_id: int,
+    task_id: str,
     jwt_token: Optional[str] = None
 ) -> Dict[str, Any]:
     """
@@ -76,7 +76,9 @@ async def complete_task(
             user_id = UUID("625460a4-b5f7-4c64-ba84-66da5dabfd3c")
             logger.info(f"Using demo user_id={user_id} (no JWT token provided)")
 
-        logger.info(f"complete_task called by user_id={user_id}, task_id={task_id}")
+        from uuid import UUID as UUIDType
+        task_uuid = UUIDType(task_id) if isinstance(task_id, str) else task_id
+        logger.info(f"complete_task called by user_id={user_id}, task_id={task_uuid}")
 
         # Get database session
         db_session = get_db_session()
@@ -84,7 +86,7 @@ async def complete_task(
         try:
             # Find task
             statement = select(Task).where(
-                Task.id == task_id,
+                Task.id == task_uuid,
                 Task.user_id == user_id  # Enforce user isolation
             )
             task = db_session.exec(statement).first()
@@ -98,7 +100,7 @@ async def complete_task(
                 )
 
             # Mark task as complete
-            task.completed = True
+            task.status = TaskStatus.COMPLETED
 
             db_session.add(task)
             db_session.commit()
@@ -109,11 +111,11 @@ async def complete_task(
             # Return success response
             return create_success_response({
                 "task": {
-                    "id": task.id,
+                    "id": str(task.id),
                     "title": task.title,
                     "description": task.description,
-                    "completed": task.completed,
-                    "user_id": task.user_id,
+                    "completed": task.status == TaskStatus.COMPLETED,
+                    "user_id": str(task.user_id),
                     "created_at": task.created_at.isoformat() if task.created_at else None,
                     "updated_at": task.updated_at.isoformat() if task.updated_at else None,
                 }
