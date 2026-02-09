@@ -10,8 +10,10 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# Python lib (but not frontend lib/)
+/lib/
 lib64/
+!apps/frontend/lib/
 parts/
 sdist/
 var/
@@ -88,3 +90,5 @@ create_tables.py
 # Reference images and assets (local only)
 *-refference-images/
 *-reference-images/
+.vercel
+.env*.local
