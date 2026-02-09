@@ -18,9 +18,13 @@ export default function Header({ onMenuClick }: HeaderProps) {
   const router = useRouter();
 
   const handleLogout = async () => {
-    // Use Better Auth sign out
-    await authClient.signOut();
+    try {
+      await authClient.signOut();
+    } catch {
+      // Clear cookie manually if signOut fails
+    }
     router.push('/login');
+    router.refresh();
   };
 
   return (
