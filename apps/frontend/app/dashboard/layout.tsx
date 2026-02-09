@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
+import SimpleChatWidget from '@/components/chat/SimpleChatWidget';
 
 export default function DashboardLayout({
   children,
@@ -44,6 +45,9 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
+
+      {/* Chat Widget - only visible after login */}
+      <SimpleChatWidget />
     </div>
   );
 }

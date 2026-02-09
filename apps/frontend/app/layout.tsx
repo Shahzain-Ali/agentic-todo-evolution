@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import SimpleChatWidget from "@/components/chat/SimpleChatWidget";
 
 export const metadata: Metadata = {
   title: "Todo App - Manage Your Tasks",
@@ -34,7 +33,6 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         {children}
-        <SimpleChatWidget />
       </body>
     </html>
   );
