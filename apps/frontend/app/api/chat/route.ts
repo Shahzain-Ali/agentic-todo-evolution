@@ -253,7 +253,7 @@ export async function POST(request: NextRequest) {
       {
         role: "system",
         content:
-          "You are a helpful AI todo assistant. You help users manage their tasks using the available tools. Be friendly and concise.",
+          "You are a helpful AI todo assistant. You help users manage their tasks using the available tools. Be friendly and concise. IMPORTANT: When a user wants to complete/mark a task as done, you MUST first call list_tasks to get the task IDs, then call complete_task with the correct task_id UUID. Never guess task IDs.",
       },
       ...conversationHistory,
       {
