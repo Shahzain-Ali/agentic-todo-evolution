@@ -12,52 +12,10 @@
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
 
 export default function TodoChatbot() {
-  // Initialize ChatKit with OpenAI-hosted backend using getClientSecret
+  // Initialize ChatKit with public key and workflow
   const { control } = useChatKit({
-    api: {
-      async getClientSecret(existing) {
-        try {
-          console.log('🔑 Getting client secret...', existing ? 'refreshing' : 'new session');
-
-          // If we have an existing secret and it's not expired, refresh it
-          if (existing) {
-            const res = await fetch('/api/chatkit/refresh', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ token: existing }),
-            });
-
-            if (!res.ok) {
-              console.error('❌ Refresh failed:', res.status, await res.text());
-              throw new Error(`Refresh failed: ${res.status}`);
-            }
-
-            const data = await res.json();
-            console.log('✅ Session refreshed');
-            return data.client_secret;
-          }
-
-          // Otherwise, create a new ChatKit session
-          const res = await fetch('/api/chatkit/session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-          });
-
-          if (!res.ok) {
-            console.error('❌ Session creation failed:', res.status, await res.text());
-            throw new Error(`Session creation failed: ${res.status}`);
-          }
-
-          const data = await res.json();
-          console.log('✅ Session created:', data.session_id);
-          return data.client_secret;
-        } catch (error) {
-          console.error('❌ ChatKit session error:', error);
-          throw error;
-        }
-      },
-    },
-    // Customize the start screen
+    publicKey: "domain_pk_698988637f4c8193a082e64ba7ca1a1f074f25075ca05848",
+    workflowId: "wf_698889a8c8188190b54b40ef2682acd00dbcf4a7ca7f9876",
     startScreen: {
       greeting: "Hello! I'm your AI Todo Assistant 🤖",
       prompts: [
@@ -78,7 +36,7 @@ export default function TodoChatbot() {
     composer: {
       placeholder: "Ask me to add, view, or complete tasks...",
     },
-  });
+  } as any);
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">

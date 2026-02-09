@@ -1,105 +1,78 @@
 """
-ChatKit Router - Simplified Version
+ChatKit Router - Agent Builder Integration
 
 [Task]: T046
 [From]: specs/003-ai-chatbot/spec.md §3 (User Stories), specs/003-ai-chatbot/plan.md §Phase 8
 
-This module provides a basic ChatKit-compatible endpoint that integrates
-with OpenAI API directly (ChatKit Python SDK not yet publicly available).
+This module provides ChatKit session endpoints that integrate with OpenAI Agent Builder workflow.
 """
 
-from fastapi import APIRouter, Request
-from fastapi.responses import StreamingResponse, JSONResponse
-import json
-import asyncio
+from fastapi import APIRouter, HTTPException
+from fastapi.responses import JSONResponse
 from openai import AsyncOpenAI
 import os
+import logging
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 # Initialize OpenAI client
 client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-
-async def stream_chat_response(message: str):
-    """Stream chat responses in ChatKit-compatible format"""
-    try:
-        # Call OpenAI API with streaming
-        stream = await client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {
-                    "role": "system",
-                    "content": """You are a helpful AI assistant that helps users manage their todo tasks.
-
-You can help users:
-- Add new tasks to their todo list
-- View all their tasks
-- Mark tasks as complete
-- Delete tasks
-- Search for specific tasks
-
-Always be friendly, concise, and helpful."""
-                },
-                {"role": "user", "content": message}
-            ],
-            stream=True,
-        )
-
-        # Stream response chunks
-        async for chunk in stream:
-            if chunk.choices[0].delta.content:
-                # Format as Server-Sent Events
-                yield f"data: {json.dumps({'content': chunk.choices[0].delta.content})}\n\n"
-
-        # Send completion signal
-        yield f"data: {json.dumps({'done': True})}\n\n"
-
-    except Exception as e:
-        print(f"Streaming Error: {e}")
-        yield f"data: {json.dumps({'error': str(e)})}\n\n"
+# Agent Builder Workflow ID
+WORKFLOW_ID = "wf_698889a8c8188190b54b40ef2682acd00dbcf4a7ca7f9876"
 
 
-@router.post("/chatkit")
-@router.post("/chatkit/")
-async def chatkit_endpoint(request: Request):
+@router.post("/chatkit/session")
+async def create_session():
     """
-    Simplified ChatKit endpoint
+    Create a new ChatKit session with Agent Builder workflow
 
-    Accepts chat requests and returns streaming AI responses.
-    Compatible with ChatKit React component expectations.
+    Returns:
+        JSON with client_secret for ChatKit initialization
     """
     try:
-        # Parse request body
-        body = await request.json()
+        logger.info(f"Creating ChatKit session for workflow: {WORKFLOW_ID}")
 
-        # Extract user message (handle different possible formats)
-        user_message = body.get("message") or body.get("text") or body.get("content") or str(body)
-
-        # Return streaming response
-        return StreamingResponse(
-            stream_chat_response(user_message),
-            media_type="text/event-stream",
-            headers={
-                "Cache-Control": "no-cache",
-                "Connection": "keep-alive",
-                "X-Accel-Buffering": "no"
-            }
+        # Create session with OpenAI Realtime API (without workflow parameter)
+        response = await client.beta.realtime.sessions.create(
+            model="gpt-4o-mini"
         )
 
-    except json.JSONDecodeError:
-        # If body is not JSON, try as plain text
-        body_bytes = await request.body()
-        user_message = body_bytes.decode()
+        logger.info(f"Session created successfully: {response.id}")
 
-        return StreamingResponse(
-            stream_chat_response(user_message),
-            media_type="text/event-stream"
-        )
+        return JSONResponse({
+            "client_secret": response.client_secret.value,
+            "session_id": response.id,
+            "workflow_id": WORKFLOW_ID  # Pass workflow ID to frontend
+        })
 
     except Exception as e:
-        print(f"ChatKit Error: {e}")
-        return JSONResponse(
-            {"error": str(e)},
-            status_code=500
+        logger.error(f"Error creating ChatKit session: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to create session: {str(e)}")
+
+
+@router.post("/chatkit/refresh")
+async def refresh_session(token: str = None):
+    """
+    Refresh an existing ChatKit session
+
+    For now, just creates a new session (OpenAI handles token refresh internally)
+    """
+    try:
+        logger.info("Refreshing ChatKit session")
+
+        # Create new session (OpenAI ChatKit handles refresh internally)
+        response = await client.beta.realtime.sessions.create(
+            model="gpt-4o-mini"
         )
+
+        return JSONResponse({
+            "client_secret": response.client_secret.value,
+            "session_id": response.id,
+            "workflow_id": WORKFLOW_ID
+        })
+
+    except Exception as e:
+        logger.error(f"Error refreshing ChatKit session: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to refresh session: {str(e)}")

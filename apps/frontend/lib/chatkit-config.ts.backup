@@ -1,0 +1,126 @@
+/**
+ * ChatKit Configuration
+ *
+ * [Task]: T016
+ * [From]: specs/003-ai-chatbot/spec.md §2.1 (FR-001), specs/003-ai-chatbot/plan.md §Phase 2
+ *
+ * This file provides configuration for the ChatKit React component including
+ * theme customization, composer settings, and start screen prompts.
+ */
+
+import type { ChatkitConfig } from "@openai/chatkit-react";
+
+export const chatkitConfig: ChatkitConfig = {
+  /**
+   * Theme customization
+   */
+  theme: {
+    primaryColor: "#3b82f6", // Blue-500 (matches Tailwind)
+    backgroundColor: "#ffffff",
+    textColor: "#1f2937", // Gray-800
+    borderRadius: "0.5rem",
+  },
+
+  /**
+   * Composer (message input) configuration
+   */
+  composer: {
+    placeholder: "Type your message... (e.g., 'Add buy groceries to my list')",
+    submitButtonLabel: "Send",
+    maxLength: 1000,
+  },
+
+  /**
+   * Start screen configuration
+   */
+  startScreen: {
+    title: "AI Todo Assistant",
+    subtitle: "Manage your tasks using natural language",
+    prompts: [
+      {
+        label: "Create a task",
+        message: "Add buy groceries to my list",
+      },
+      {
+        label: "View my tasks",
+        message: "Show me all my tasks",
+      },
+      {
+        label: "Complete a task",
+        message: "Mark task 1 as done",
+      },
+      {
+        label: "Delete a task",
+        message: "Delete task 3",
+      },
+    ],
+  },
+
+  /**
+   * Header configuration
+   */
+  header: {
+    title: "Todo Chat",
+    showActions: true,
+    actions: [
+      {
+        label: "Clear conversation",
+        action: "clear",
+      },
+    ],
+  },
+
+  /**
+   * Message display configuration
+   */
+  messages: {
+    showTimestamp: true,
+    groupByTime: true,
+    enableMarkdown: true,
+  },
+
+  /**
+   * Error handling configuration
+   */
+  errors: {
+    retryEnabled: true,
+    showErrorDetails: false, // Don't expose technical errors to users
+  },
+};
+
+/**
+ * Session API endpoints
+ */
+export const sessionEndpoints = {
+  create: "/api/chatkit/session",
+  refresh: "/api/chatkit/refresh",
+};
+
+/**
+ * Agent instructions (sent to OpenAI Agent)
+ * These help the agent understand its role and capabilities
+ */
+export const agentInstructions = `
+You are a helpful AI assistant that helps users manage their todo tasks.
+
+You have access to the following tools:
+- add_task: Create a new todo task
+- list_tasks: View all tasks (with optional filter: all, completed, pending)
+- complete_task: Mark a task as complete
+- delete_task: Remove a task
+- update_task: Modify task title or description
+
+Guidelines:
+1. Always confirm actions before executing them (e.g., "I'll add 'Buy groceries' to your list")
+2. After completing an action, provide clear confirmation
+3. When listing tasks, format them clearly with numbers
+4. If a request is ambiguous, ask for clarification
+5. Be concise and friendly
+6. Use natural language and avoid technical jargon
+7. If a task fails, explain the error in simple terms
+
+Examples:
+- User: "Add buy milk" → You: "I'll add 'Buy milk' to your todo list." [calls add_task]
+- User: "Show my tasks" → You: "Here are your tasks:" [calls list_tasks and formats output]
+- User: "Mark the first one as done" → You: "I'll mark task 1 as complete." [calls complete_task]
+`;
