@@ -16,24 +16,45 @@ export default function TodoChatbot() {
   const { control } = useChatKit({
     api: {
       async getClientSecret(existing) {
-        // If we have an existing secret and it's not expired, refresh it
-        if (existing) {
-          const res = await fetch('/api/chatkit/refresh', {
+        try {
+          console.log('🔑 Getting client secret...', existing ? 'refreshing' : 'new session');
+
+          // If we have an existing secret and it's not expired, refresh it
+          if (existing) {
+            const res = await fetch('/api/chatkit/refresh', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ token: existing }),
+            });
+
+            if (!res.ok) {
+              console.error('❌ Refresh failed:', res.status, await res.text());
+              throw new Error(`Refresh failed: ${res.status}`);
+            }
+
+            const data = await res.json();
+            console.log('✅ Session refreshed');
+            return data.client_secret;
+          }
+
+          // Otherwise, create a new ChatKit session
+          const res = await fetch('/api/chatkit/session', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token: existing }),
           });
-          const data = await res.json();
-          return data.client_secret;
-        }
 
-        // Otherwise, create a new ChatKit session
-        const res = await fetch('/api/chatkit/session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-        });
-        const data = await res.json();
-        return data.client_secret;
+          if (!res.ok) {
+            console.error('❌ Session creation failed:', res.status, await res.text());
+            throw new Error(`Session creation failed: ${res.status}`);
+          }
+
+          const data = await res.json();
+          console.log('✅ Session created:', data.session_id);
+          return data.client_secret;
+        } catch (error) {
+          console.error('❌ ChatKit session error:', error);
+          throw error;
+        }
       },
     },
     // Customize the start screen
@@ -43,17 +64,14 @@ export default function TodoChatbot() {
         {
           label: "Add a task",
           prompt: "Add buy groceries to my list",
-          icon: "plus",
         },
         {
           label: "View tasks",
           prompt: "Show me all my tasks",
-          icon: "list",
         },
         {
           label: "Complete a task",
           prompt: "Mark task 1 as done",
-          icon: "check",
         },
       ],
     },
