@@ -24,16 +24,21 @@ export default function SimpleChatWidget() {
 
     const userMessage = input.trim();
     setInput("");
-    setMessages(prev => [...prev, { role: "user", content: userMessage }]);
+
+    const updatedMessages = [...messages, { role: "user" as const, content: userMessage }];
+    setMessages(updatedMessages);
     setLoading(true);
 
     try {
-      // Call our Next.js API route with OpenAI workflow
+      // Send conversation history (skip the initial greeting, last 20 messages max)
+      const history = updatedMessages.slice(1, -1).slice(-20);
+
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: userMessage,
+          conversationHistory: history,
           sessionId: sessionId
         })
       });
