@@ -43,12 +43,16 @@ def validate_jwt_token(token: str) -> Dict[str, Any]:
             algorithms=[config.JWT_ALGORITHM]
         )
 
-        # Verify required claims
-        if "user_id" not in payload:
+        # Verify required claims (support both "sub" and "user_id" formats)
+        if "sub" not in payload and "user_id" not in payload:
             raise AuthenticationError(
-                message="Invalid token: missing user_id claim",
+                message="Invalid token: missing user identifier claim",
                 details={"error_code": ErrorCode.INVALID_TOKEN}
             )
+
+        # Normalize: if "sub" exists but "user_id" doesn't, copy it
+        if "sub" in payload and "user_id" not in payload:
+            payload["user_id"] = payload["sub"]
 
         # Check expiration (exp claim)
         if "exp" in payload:
@@ -70,7 +74,7 @@ def validate_jwt_token(token: str) -> Dict[str, Any]:
         )
 
 
-def extract_user_id(token: str) -> int:
+def extract_user_id(token: str):
     """
     Extract user_id from JWT token
 
@@ -78,14 +82,17 @@ def extract_user_id(token: str) -> int:
         token: JWT token string
 
     Returns:
-        User ID as integer
+        User ID (UUID or integer)
 
     Raises:
         AuthenticationError: If token is invalid or user_id cannot be extracted
     """
+    from uuid import UUID
+
     payload = validate_jwt_token(token)
 
-    user_id = payload.get("user_id")
+    # Support both "user_id" and "sub" claims
+    user_id = payload.get("user_id") or payload.get("sub")
 
     if user_id is None:
         raise AuthenticationError(
@@ -93,24 +100,28 @@ def extract_user_id(token: str) -> int:
             details={"error_code": ErrorCode.INVALID_TOKEN}
         )
 
+    # Try UUID first, then int
     try:
-        return int(user_id)
-    except (ValueError, TypeError):
-        raise AuthenticationError(
-            message="Invalid user_id format in token",
-            details={"error_code": ErrorCode.INVALID_TOKEN}
-        )
+        return UUID(str(user_id))
+    except ValueError:
+        try:
+            return int(user_id)
+        except (ValueError, TypeError):
+            raise AuthenticationError(
+                message="Invalid user_id format in token",
+                details={"error_code": ErrorCode.INVALID_TOKEN}
+            )
 
 
-def require_authentication(token: Optional[str]) -> int:
+def require_authentication(token: Optional[str]):
     """
-    Decorator-style helper to require authentication
+    Require authentication and return user ID
 
     Args:
         token: JWT token string (optional)
 
     Returns:
-        User ID if authentication succeeds
+        User ID (UUID or integer) if authentication succeeds
 
     Raises:
         AuthenticationError: If authentication fails
