@@ -91,7 +91,7 @@ export default function SimpleChatWidget() {
 
       {/* Chat Modal */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-50 w-96 h-[600px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col">
+        <div className="fixed bottom-24 right-4 left-4 md:left-auto md:right-6 z-50 md:w-96 h-[calc(100vh-8rem)] max-h-[600px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col">
           {/* Header */}
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3 flex items-center justify-between rounded-t-2xl">
             <div className="flex items-center gap-2">
