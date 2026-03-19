@@ -21,10 +21,7 @@ class MCPConfig:
     PORT: int = int(os.getenv("PORT", os.getenv("MCP_SERVER_PORT", "8001")))
 
     # Database Settings (reuse from Phase 2)
-    DATABASE_URL: str = os.getenv(
-        "DATABASE_URL",
-        "postgresql://user:password@localhost:5432/todo_db"
-    )
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "")
 
     # OpenAI Settings
     OPENAI_API_KEY: Optional[str] = os.getenv("OPENAI_API_KEY")

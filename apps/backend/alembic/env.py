@@ -24,7 +24,9 @@ from app.models.task import Task
 config = context.config
 
 # Set database URL from environment variable
-database_url = os.getenv("DATABASE_URL", "postgresql://user:password@localhost:5432/todo_db")
+database_url = os.getenv("DATABASE_URL")
+if not database_url:
+    raise RuntimeError("DATABASE_URL environment variable is required")
 config.set_main_option("sqlalchemy.url", database_url)
 
 # Interpret the config file for Python logging.

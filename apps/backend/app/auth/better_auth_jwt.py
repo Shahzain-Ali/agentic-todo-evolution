@@ -13,7 +13,9 @@ from typing import Optional, Dict, Any
 
 
 # Better Auth JWT Configuration
-BETTER_AUTH_SECRET = os.getenv("BETTER_AUTH_SECRET", "your-super-secret-key-min-32-chars-long-for-production-use")
+BETTER_AUTH_SECRET = os.getenv("BETTER_AUTH_SECRET")
+if not BETTER_AUTH_SECRET:
+    raise RuntimeError("BETTER_AUTH_SECRET environment variable is required")
 BETTER_AUTH_ISSUER = os.getenv("BETTER_AUTH_ISSUER", "todo-app")
 BETTER_AUTH_AUDIENCE = os.getenv("BETTER_AUTH_AUDIENCE", "todo-api")
 ALGORITHM = "HS256"
