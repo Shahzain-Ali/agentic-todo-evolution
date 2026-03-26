@@ -1,12 +1,13 @@
 # 📋 Agentic Todo Evolution
 
-A progressive todo application demonstrating evolution from console app to modern full-stack web application.
+Full-stack todo app evolving from console to web with auth, AI chatbot, and modern UI (Python, FastAPI, Next.js)
 
 ## 🎯 Project Overview
 
-This project showcases systematic application development through two phases:
+This project showcases systematic application development through three phases:
 - **Phase 1**: Console application with in-memory storage
 - **Phase 2**: Full-stack web application with modern UI and database persistence
+- **Phase 3**: AI-powered chatbot for natural language task management
 
 ---
 
@@ -34,6 +35,8 @@ A modern, production-ready todo web application with beautiful UI inspired by To
 **Backend**: FastAPI 0.100+ • SQLModel 0.14+ • Python 3.11+ • Better Auth • Pydantic v2
 
 **Database**: PostgreSQL 15+ • Neon Serverless • Alembic migrations
+
+**AI Chat (Phase 3)**: OpenAI Agents SDK • GPT-4o-mini • FastMCP • ChatKit
 
 ### 🚀 Quick Start
 
@@ -96,6 +99,50 @@ Frontend: http://localhost:3000
 - Responsive cards with rounded corners and shadows
 - Skeleton loaders matching content structure
 - Friendly empty states with icons
+
+---
+
+## 🤖 Phase 3: AI-Powered Todo Chatbot
+
+A natural language interface for managing todos through conversation. Instead of clicking buttons, just tell the chatbot what you want to do.
+
+### ✨ Features
+
+- 💬 **Natural Language Task Management**: "Add buy groceries to my list", "Show my pending tasks"
+- 🧠 **OpenAI Agents SDK**: GPT-4o-mini powered intent understanding and function calling
+- 🔌 **MCP Protocol**: Model Context Protocol server for tool-based task operations
+- 🎨 **ChatKit UI**: OpenAI's hosted chat interface component
+- 🔒 **JWT Authentication**: Each chat action validates user identity
+- 👤 **User Isolation**: Users can only manage their own tasks via chat
+
+### 🛠️ Tech Stack
+
+**AI Layer**: OpenAI Agents SDK • GPT-4o-mini • Function Calling
+
+**Protocol**: FastMCP (Python) • Model Context Protocol
+
+**Frontend**: ChatKit • Next.js API Routes
+
+### 🔧 MCP Tools
+
+| Tool | Description |
+|------|-------------|
+| `add_task` | Create a new task via natural language |
+| `list_tasks` | View tasks (all, pending, or completed) |
+| `complete_task` | Mark a task as done |
+
+### 💬 Example Conversations
+
+```
+User: "Add buy milk to my list"
+Bot: ✅ Task "buy milk" has been added!
+
+User: "What tasks do I have?"
+Bot: You have 3 tasks: 1. Buy milk (pending), 2. Fix bug (pending), 3. Read docs (completed)
+
+User: "Mark task 1 as done"
+Bot: ✅ "Buy milk" marked as completed!
+```
 
 ---
 
